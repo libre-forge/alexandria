@@ -4,10 +4,10 @@
             [libreforge.db.connection :as db]))
 
 (defn create-user
-  "creates a new student"
+  "creates a new user"
   [user]
   (let [params {:name (:name user)}
-        query (-> (dsl/insert-into :student)
+        query (-> (dsl/insert-into :liber)
                   (dsl/insert-values params)
                   (dsl/returning :id))]
      (with-open [conn (db/connection)]
@@ -15,18 +15,18 @@
 
 (defn find-login
   "checks credentials provided from login"
-  [username password]
+  [email password]
   (let [query (-> (dsl/select)
-                  (dsl/from :student)
-                  (dsl/where ["username = ?", username]
+                  (dsl/from :liber)
+                  (dsl/where ["email = ?", email]
                              ["password = ?", password]))]
     (with-open [conn (db/connection)]
       (sc/fetch-one conn query))))
 
 (defn list-all
-  "list all students"
+  "list all libers"
   []
   (let [query (-> (dsl/select)
-                  (dsl/from :student))]
+                  (dsl/from :liber))]
     (with-open [conn (db/connection)]
       (sc/fetch conn query))))

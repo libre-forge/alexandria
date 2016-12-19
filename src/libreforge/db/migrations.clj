@@ -8,7 +8,7 @@
 
 (defmigration utils-0000
   "Create student table."
-  :up (mg/resource "migrations/0000.students.sql"))
+  :up (mg/resource "migrations/0000.init.sql"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Entry point

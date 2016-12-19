@@ -14,7 +14,7 @@
                [:post "auth/token" users/login]
                [:any (cauth/auth users/auth-backend)]
                [:any users/authorization]
-               [:get "users" users/list-all]]]))
+               [:get "users" users/queries]]]))
 
 (defn -main
   "application's entry point"

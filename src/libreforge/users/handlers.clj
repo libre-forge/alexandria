@@ -6,7 +6,8 @@
               [cheshire.core :as json]
               [buddy.sign.jwt :as jwt]
               [libreforge.util.uuid :as uuid]
-              [libreforge.users.services :as services]))
+              [libreforge.users.services :as services]
+              [libreforge.users.graphql :as graphql]))
 
 (def secret "mysecret")
 
@@ -38,9 +39,10 @@
           (http/ok {:content-type json-type}))
       (http/not-found))))
 
-(defn list-all
+(defn queries
   "lists all users"
   [context]
-  (let [users (services/list-all)]
-    (-> (json/encode {:users users})
+  (let [query (:query (:query-params context))
+        result (graphql/resolve nil query)]
+    (-> (json/encode result)
         (http/ok {:content-type json-type}))))

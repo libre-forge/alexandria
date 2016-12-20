@@ -23,6 +23,15 @@
     (with-open [conn (db/connection)]
       (sc/fetch-one conn query))))
 
+(defn find-by-email
+  "find a user by his email"
+  [email]
+  (let [query (-> (dsl/select)
+                  (dsl/from :liber)
+                  (dsl/where ["email = ?", email]))]
+    (with-open [conn (db/connection)]
+      (sc/fetch-one conn query))))
+
 (defn list-all
   "list all libers"
   []

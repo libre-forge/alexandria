@@ -7,7 +7,7 @@
               [buddy.sign.jwt :as jwt]
               [libreforge.util.uuid :as uuid]
               [libreforge.users.services :as services]
-              [libreforge.users.graphql :as graphql]))
+              [libreforge.graphql :as graphql]))
 
 (def secret "mysecret")
 
@@ -43,6 +43,7 @@
   "lists all users"
   [context]
   (let [query (:query (:query-params context))
-        result (graphql/resolve nil query)]
+        vars (:variables (:query-params context))
+        result (graphql/resolve nil query vars)]
     (-> (json/encode result)
         (http/ok {:content-type json-type}))))

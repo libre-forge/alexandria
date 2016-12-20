@@ -13,7 +13,7 @@
                :username "libreforge"
                :password "libreforge"
                :database-name "libreforge"
-               :server-name "db"
+               :server-name "localhost"
                :port-number 5432}))
 
 (defn connection

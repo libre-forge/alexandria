@@ -9,3 +9,9 @@
   [context parent args]
   (let [email (get args "email")]
     (users/find-by-email email)))
+
+(defn login
+  [context parent args]
+  (let [username (get args "username")
+        password (get args "password")]
+    (users/find-login username password)))

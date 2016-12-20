@@ -9,7 +9,8 @@
    [catacumba.http :as http]
    [libreforge.util.http :as http-util]
    [libreforge.util.uuid :as uuid]
-   [libreforge.users.graphql :as users]))
+   [libreforge.users.graphql :as users]
+   [libreforge.courses.graphql :as courses]))
 
 (def schema-str "
   type User {
@@ -21,23 +22,14 @@
   type Course {
     id: String
     title: String
+    description: String
     createdAt: String
-    createdBy: User
-  }
-
-  type Theme {
-    id: String
-    title: String
-    course: Course
-    createdAt: String
-    createdBy: User
   }
 
   type QueryRoot {
     user(email: String): User
     users: [User]
-    course: Course
-    theme: Theme
+    courses: [Course]
   }
 
   schema {
@@ -51,7 +43,8 @@
   [type-name field-name]
   (cond
     (and (= "QueryRoot" type-name) (= "user" field-name)) users/find-by-email
-    (and (= "QueryRoot" type-name) (= "users" field-name)) users/list-all))
+    (and (= "QueryRoot" type-name) (= "users" field-name)) users/list-all
+    (and (= "QueryRoot" type-name) (= "courses" field-name)) courses/list-all))
 
 (def context nil)
 

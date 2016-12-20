@@ -16,16 +16,19 @@
   input Credentials {
      username: String
      password: String
+    __typename:String
   }
 
   type Login {
     token: String
+    __typename:String
   }
 
   type User {
     id: String
     name: String
     email: String
+    __typename:String
   }
 
   type Course {
@@ -33,6 +36,7 @@
     title: String
     description: String
     createdAt: String
+    __typename:String
   }
 
   type QueryRoot {

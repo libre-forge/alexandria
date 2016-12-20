@@ -23,7 +23,7 @@
   [{:keys [identity] :as context}]
   (if identity
     (ct/delegate {:identity (uuid/from-string (:id identity))})
-    (http/forbidden)))
+    (http/forbidden "")))
 
 (defn login
   "users can get a valid token providing their credentials

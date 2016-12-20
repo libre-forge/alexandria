@@ -14,6 +14,7 @@
                 [funcool/promesa "1.6.0"]
                 [funcool/catacumba "2.0.0-SNAPSHOT"]
                 [funcool/suricatta "1.2.0"]
+                [org.slf4j/slf4j-simple "1.7.21"]
                 [hikari-cp "0.13.0" :exclusions [com.zaxxer/HikariCP]]
                 [com.zaxxer/HikariCP-java6 "2.2.5"]
                 [org.postgresql/postgresql "9.4.1212"]

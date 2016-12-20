@@ -5,6 +5,9 @@
    [graphql-clj.type :as type]
    [graphql-clj.validator :as validator]
    [graphql-clj.executor :as executor]
+   [cheshire.core :as json]
+   [catacumba.http :as http]
+   [libreforge.util.http :as http-util]
    [libreforge.util.uuid :as uuid]
    [libreforge.users.graphql :as users]))
 
@@ -59,3 +62,13 @@
                   parser/parse
                   (validator/validate-statement type-schema))]
     (executor/execute context type-schema dispatch query variables)))
+
+
+(defn handler
+  "GraphQL endpoint"
+  [context]
+  (let [query (:query (:query-params context))
+        vars (:variables (:query-params context))
+        result (resolve nil query vars)]
+    (-> (json/encode result)
+        (http/ok {:content-type http-util/json-type}))))

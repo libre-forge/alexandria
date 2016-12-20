@@ -6,6 +6,7 @@
               [cheshire.core :as json]
               [buddy.sign.jwt :as jwt]
               [libreforge.util.uuid :as uuid]
+              [libreforge.util.http :as http-util]
               [libreforge.users.services :as services]
               [libreforge.graphql :as graphql]))
 
@@ -24,8 +25,6 @@
     (ct/delegate {:identity (uuid/from-string (:id identity))})
     (http/forbidden)))
 
-(def json-type "application/json")
-
 (defn login
   "users can get a valid token providing their credentials
   against this endpoint"
@@ -36,14 +35,5 @@
         user (services/find-login username password)]
     (if user
       (-> (json/encode {:token (jwt/sign {:id (:id user)} secret)})
-          (http/ok {:content-type json-type}))
+          (http/ok {:content-type http-util/json-type}))
       (http/not-found))))
-
-(defn queries
-  "lists all users"
-  [context]
-  (let [query (:query (:query-params context))
-        vars (:variables (:query-params context))
-        result (graphql/resolve nil query vars)]
-    (-> (json/encode result)
-        (http/ok {:content-type json-type}))))

@@ -4,6 +4,7 @@
             [catacumba.handlers.auth :as cauth]
             [catacumba.handlers.parse :as parse]
             [catacumba.handlers.misc :as misc]
+            [libreforge.graphql :as graphql]
             [libreforge.users.handlers :as users]
             [libreforge.db.migrations :as mg])
   (:gen-class))
@@ -21,4 +22,4 @@
                [:post "auth/token" users/login]
                [:any (cauth/auth users/auth-backend)]
                [:any users/authorization]
-               [:get "users" users/queries]]]))
+               [:get "graphql" graphql/handler]]]))

@@ -9,7 +9,7 @@
             [libreforge.db.migrations :as mg])
   (:gen-class))
 
-(def cors-conf {:origin #{"*"}                     ;; mandatory
+(def cors-conf {:origin "*"                     ;; mandatory
                 :max-age 3600                                       ;; optional
                 :allow-methods #{:option :post :put :get :delete}           ;; optional
                 :allow-headers #{:x-requested-with :content-type}}) ;; optional

@@ -1,0 +1,67 @@
+input Credentials {
+    username: String
+    password: String
+    __typename:String
+}
+
+input CreateCourse {
+    title: String
+    pitch: String
+    description: String
+    member_limit: Int
+    subjects: [String!]
+    __typename:String
+}
+
+enum CourseStatus {
+    active
+    ongoing
+    archived
+}
+
+input CourseFilter {
+    byTopic: String
+    byStatus: CourseStatus
+}
+
+type Login {
+    token: String
+    __typename:String
+}
+
+type User {
+    id: String
+    name: String
+    email: String
+    __typename:String
+}
+
+type Course {
+    id: String
+    title: String
+    pitch: String
+    description: String
+    member_count: Int
+    member_limit: Int
+    members: [User]
+    created_at: String
+    created_by: String
+    __typename:String
+}
+
+type QueryRoot {
+    user(email: String): User
+    users: [User]
+    courses(filter: CourseFilter): [Course]
+    course(id: String): Course
+}
+
+type MutationRoot {
+    login(credentials: Credentials): Login
+    course(course: CreateCourse): Course
+}
+
+schema {
+    query: QueryRoot
+    mutation: MutationRoot
+}

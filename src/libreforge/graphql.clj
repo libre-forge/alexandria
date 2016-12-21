@@ -8,82 +8,22 @@
    [catacumba.http :as http]
    [libreforge.util.http :as http-util]
    [libreforge.util.uuid :as uuid]
+   [libreforge.util.io :as io]
    [libreforge.users.graphql :as users]
    [libreforge.courses.graphql :as courses]))
 
-(def schema-str "
-  input Credentials {
-     username: String
-     password: String
-    __typename:String
-  }
-
-  input CreateCourse {
-     title: String
-     pitch: String
-     description: String
-     member_limit: Int
-     subjects: [String!]
-    __typename:String
-  }
-
-  enum CourseStatus {
-     active
-     ongoing
-     archived
-  }
-
-  input CourseFilter {
-    byTopic: String
-    byStatus: CourseStatus
-  }
-
-  type Login {
-    token: String
-    __typename:String
-  }
-
-  type User {
-    id: String
-    name: String
-    email: String
-    __typename:String
-  }
-
-  type Course {
-    id: String
-    title: String
-    pitch: String
-    description: String
-    member_count: Int
-    member_limit: Int
-    members: [User]
-    created_at: String
-    created_by: String
-    __typename:String
-  }
-
-  type QueryRoot {
-    user(email: String): User
-    users: [User]
-    courses(filter: CourseFilter): [Course]
-    course(id: String): Course
-  }
-
-  type MutationRoot {
-     login(credentials: Credentials): Login
-     course(course: CreateCourse): Course
-  }
-
-  schema {
-    query: QueryRoot,
-    mutation: MutationRoot
-  }")
+(def schema-str
+  "loads this application's GraphQL schema"
+  (io/read-resource "graphql/schema.gql"))
 
 (def type-schema
-  (-> schema-str parser/parse validator/validate-schema))
+  "returns a validated GraphQL schema"
+  (-> schema-str
+      parser/parse
+      validator/validate-schema))
 
 (defn dispatch
+  "dispatches incoming requests to the correspondent GraphQL handler"
   [type-name field-name]
   (cond
     (and (= "QueryRoot" type-name) (= "user" field-name)) users/find-by-email
@@ -93,10 +33,11 @@
     (and (= "MutationRoot" type-name) (= "login" field-name)) users/login
     (and (= "MutationRoot" type-name) (= "course" field-name)) courses/create))
 
-
 (def context nil)
 
 (defn restore
+  "by default json handler converts keys in keywords and GraphQL
+  variable keys need to get to the backend unaltered"
   [m]
   (let [json-str (json/generate-string m)
         json-map (json/parse-string json-str)]
@@ -104,9 +45,9 @@
 
 (defn resolve
   "validates and executes GraphQL query"
-  [context query variables]
+  [ctx query variables]
   (let [vars (restore variables)]
-    (executor/execute context type-schema dispatch query vars)))
+    (executor/execute ctx type-schema dispatch query vars)))
 
 (defn mutations
   "GraphQL endpoint"

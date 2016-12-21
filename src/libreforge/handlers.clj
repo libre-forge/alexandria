@@ -22,4 +22,4 @@
                [:post "auth/token" users/login]
 ;;               [:any (cauth/auth users/auth-backend)]
 ;;               [:any users/authorization]
-               [:post "graphql" graphql/queries]]]))
+               [:post "graphql" graphql/mutations]]]))

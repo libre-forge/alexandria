@@ -1,4 +1,1 @@
-curl -X POST -H "Content-Type: application/json" -d '{"username": "john.doe@gmail.com", "password": "password1234"}' http://localhost:3030/api/auth/token
-
-
-curl -X POST -H "Content-Type: application/json" -d '{"query": "mutation Login", "variables":{}}' http://localhost:3030/api/graphql
+curl -X POST -H "Content-Type: application/json" -d '{"query": "mutation GetToken($credentials: Credentials) {login(credentials: $credentials) {token}}", "variables": {"credentials": {"username":"john.doe@gmail.com", "password": "password1234"}}}' http://localhost:3030/api/graphql

@@ -1,6 +1,5 @@
 (ns libreforge.graphql
   (:require
-   [cheshire.core :as json]
    [graphql-clj.parser :as parser]
    [graphql-clj.type :as type]
    [graphql-clj.validator :as validator]
@@ -16,6 +15,12 @@
   input Credentials {
      username: String
      password: String
+    __typename:String
+  }
+
+  input CreateCourse {
+     title: String
+     description: String
     __typename:String
   }
 
@@ -35,7 +40,8 @@
     id: String
     title: String
     description: String
-    createdAt: String
+    created_at: String
+    created_by: String
     __typename:String
   }
 
@@ -47,6 +53,7 @@
 
   type MutationRoot {
      login(credentials: Credentials): Login
+     course(course: CreateCourse): Course
   }
 
   schema {
@@ -63,34 +70,29 @@
     (and (= "QueryRoot" type-name) (= "user" field-name)) users/find-by-email
     (and (= "QueryRoot" type-name) (= "users" field-name)) users/list-all
     (and (= "QueryRoot" type-name) (= "courses" field-name)) courses/list-all
-    (and (= "MutationRoot" type-name) (= "login" field-name)) users/login))
+    (and (= "MutationRoot" type-name) (= "login" field-name)) users/login
+    (and (= "MutationRoot" type-name) (= "course" field-name)) courses/create))
 
 
 (def context nil)
 
+(defn restore
+  [m]
+  (let [json-str (json/generate-string m)
+        json-map (json/parse-string json-str)]
+    json-map))
+
 (defn resolve
-  [context, query-str var-str]
-  (let [variables (json/parse-string var-str)
-        query (-> query-str
-                  parser/parse
-                  (validator/validate-statement type-schema))]
-    (executor/execute context type-schema dispatch query variables)))
-
-
-(defn queries
-  "GraphQL endpoint"
-  [context]
-  (let [query (:query (:data context))
-        vars (:variables (:query-params context))
-        result (resolve nil query vars)]
-    (-> (json/encode result)
-        (http/ok {:content-type http-util/json-type}))))
+  "validates and executes GraphQL query"
+  [context query variables]
+  (let [vars (restore variables)]
+    (executor/execute context type-schema dispatch query vars)))
 
 (defn mutations
   "GraphQL endpoint"
   [context]
-  (let [query (:query (:query-params context))
-        vars (:variables (:query-params context))
+  (let [query (:query (:data context))
+        vars (:variables (:data context))
         result (resolve nil query vars)]
     (-> (json/encode result)
         (http/ok {:content-type http-util/json-type}))))

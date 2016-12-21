@@ -1,0 +1,1 @@
+curl -X POST -H "Content-Type: application/json" -d '{"query": "mutation CreateCourse($course: CreateCourse) {course(course: $course) {id}}", "variables": {"course": {"title":"New Course", "description": "tiny description"}}}' http://localhost:3030/api/graphql

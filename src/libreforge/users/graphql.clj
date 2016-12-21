@@ -1,5 +1,7 @@
 (ns libreforge.users.graphql
-  (:require [libreforge.users.services :as users]))
+  (:require [libreforge.users.services :as users]
+            [cheshire.core :as json]
+            [buddy.sign.jwt :as jwt]))
 
 (defn list-all
   [context parent args]
@@ -10,8 +12,14 @@
   (let [email (get args "email")]
     (users/find-by-email email)))
 
+
+(def secret "mysecret")
 (defn login
   [context parent args]
-  (let [username (get args "username")
-        password (get args "password")]
-    (users/find-login username password)))
+  (let [credentials (get args "credentials")
+        username (get credentials "username")
+        password (get credentials "password")
+        user (users/find-login username password)]
+    (if user
+      {:token (jwt/sign {:id (:id user)} secret)}
+      {"token" "kk"})))

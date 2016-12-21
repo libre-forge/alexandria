@@ -68,5 +68,9 @@
 
 (defn by-id
   [id]
-  (with-open [conn (db/connection)]
-      (sc/fetch-one conn ["select * from course where id = ?" id])))
+  (let [course (with-open [conn (db/connection)]
+                 (sc/fetch-one conn ["select * from course where id = ?" id]))
+        members (with-open [conn (db/connection)]
+                  (sc/fetch conn ["select * FROM liber l join liber_course lc ON l.id = lc.liber WHERE lc.course = ?" id]))
+        course-w-members (assoc course :members members)]
+    course-w-members))

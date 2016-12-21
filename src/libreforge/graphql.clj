@@ -27,6 +27,17 @@
     __typename:String
   }
 
+  enum CourseStatus {
+     active
+     ongoing
+     archived
+  }
+
+  input CourseFilter {
+    byTopic: String
+    byStatus: CourseStatus
+  }
+
   type Login {
     token: String
     __typename:String
@@ -55,7 +66,7 @@
   type QueryRoot {
     user(email: String): User
     users: [User]
-    courses: [Course]
+    courses(filter: CourseFilter): [Course]
     course(id: String): Course
   }
 

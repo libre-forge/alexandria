@@ -4,7 +4,9 @@
 
 (defn list-all
   [context parent args]
-  (courses/list-all))
+  (let [filter (get args "filter")
+        result (courses/list-all filter)]
+    result))
 
 (defn by-id
   [context parent args]

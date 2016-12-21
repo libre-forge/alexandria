@@ -23,6 +23,20 @@
                   (sc/fetch conn query))]
     (map fill-member-count courses)))
 
+(defn list-all
+  "list all courses"
+  [filter]
+  (let [topic (get filter "byTopic")
+        status (get filter "byStatus")
+        query (-> (dsl/select)
+                  (dsl/from :course)
+                  (dsl/where ["course.title like '%?%' OR course.description like '%?%'" (data/nvl topic "")]
+                             ["course.status = ?" (data/nvl status "active")]))
+        courses (with-open [conn (db/connection)]
+                  (sc/fetch conn query))]
+    (println (fmt/sql query))
+    (map fill-member-count courses)))
+
 (defn create-course
   "creates a new course"
   [course]

@@ -20,6 +20,7 @@ CREATE TABLE course (
   title text,
   pitch text,
   description text,
+  status text DEFAULT 'active',
   member_limit int DEFAULT 0,
   created_at timestamp DEFAULT CURRENT_DATE,
   created_by uuid);

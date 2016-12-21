@@ -33,11 +33,11 @@
     (with-open [conn (db/connection)]
       (sc/fetch-one conn query))))
 
-(defn create-theme
-  "creates a theme from a given title"
+(defn create-subject
+  "creates a subject from a given title"
   [course-id title]
   (let [id (uuid/random)
-        query (-> (dsl/insert-into :theme)
+        query (-> (dsl/insert-into :subject)
                   (dsl/insert-values {:id id :course course-id :title title})
                   (dsl/returning :id))]
     (with-open [conn (db/connection)]
@@ -50,7 +50,7 @@
         saved (create-course course)
         subjects (:subjects course)]
     (doseq [th subjects]
-      (create-theme course-id th))
+      (create-subject course-id th))
     saved))
 
 (defn by-id

@@ -24,7 +24,7 @@ CREATE TABLE course (
   created_at timestamp DEFAULT CURRENT_DATE,
   created_by uuid);
 
-CREATE TABLE theme (
+CREATE TABLE subject (
   id uuid PRIMARY KEY,
   title text,
   course uuid,
@@ -35,14 +35,14 @@ CREATE TABLE resource (
   id uuid PRIMARY KEY,
   title text,
   description text,
-  theme uuid,
+  subject uuid,
   created_at timestamp DEFAULT CURRENT_DATE,
   created_by uuid);
 
 CREATE TABLE comment (
   id uuid PRIMARY KEY,
   content text,
-  theme uuid,
+  subject uuid,
   course uuid,
   created_at timestamp DEFAULT CURRENT_DATE,
   created_by uuid);

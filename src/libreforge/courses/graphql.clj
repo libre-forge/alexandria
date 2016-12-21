@@ -6,6 +6,11 @@
   [context parent args]
   (courses/list-all))
 
+(defn by-id
+  [context parent args]
+  (let [id (uuid/from-string (get args "id"))]
+    (courses/by-id id)))
+
 (defn create
   [context parent args]
   (let [input (get args "course")

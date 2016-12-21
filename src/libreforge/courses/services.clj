@@ -52,3 +52,8 @@
     (doseq [th themes]
       (create-theme course-id th))
     saved))
+
+(defn by-id
+  [id]
+  (with-open [conn (db/connection)]
+      (sc/fetch-one conn ["select * from course where id = ?" id])))

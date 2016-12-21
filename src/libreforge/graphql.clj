@@ -56,6 +56,7 @@
     user(email: String): User
     users: [User]
     courses: [Course]
+    course(id: String): Course
   }
 
   type MutationRoot {
@@ -77,6 +78,7 @@
     (and (= "QueryRoot" type-name) (= "user" field-name)) users/find-by-email
     (and (= "QueryRoot" type-name) (= "users" field-name)) users/list-all
     (and (= "QueryRoot" type-name) (= "courses" field-name)) courses/list-all
+    (and (= "QueryRoot" type-name) (= "course" field-name)) courses/by-id
     (and (= "MutationRoot" type-name) (= "login" field-name)) users/login
     (and (= "MutationRoot" type-name) (= "course" field-name)) courses/create))
 

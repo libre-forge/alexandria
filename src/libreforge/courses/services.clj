@@ -34,7 +34,6 @@
                              ["course.status = ?" (data/nvl status "active")]))
         courses (with-open [conn (db/connection)]
                   (sc/fetch conn query))]
-    (println (fmt/sql query))
     (map fill-member-count courses)))
 
 (defn create-course

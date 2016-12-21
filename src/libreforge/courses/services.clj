@@ -26,7 +26,7 @@
 (defn create-course
   "creates a new course"
   [course]
-  (let [clean-params (dissoc (data/filter-nil course) :themes)
+  (let [clean-params (dissoc (data/filter-nil course) :subjects)
         query (-> (dsl/insert-into :course)
                   (dsl/insert-values clean-params)
                   (dsl/returning :id))]
@@ -48,8 +48,8 @@
   (let [course-id (uuid/random)
         course (merge params {:id course-id})
         saved (create-course course)
-        themes (:themes course)]
-    (doseq [th themes]
+        subjects (:subjects course)]
+    (doseq [th subjects]
       (create-theme course-id th))
     saved))
 

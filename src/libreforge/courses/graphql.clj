@@ -18,10 +18,10 @@
         member_limit (get input "member_limit")
         title (get input "title")
         description (get input "description")
-        themes (get input "themes")
+        subjects (get input "subjects")
         id (uuid/random)]
         (courses/create {:title title
                          :pitch pitch
                          :description description
                          :member_limit member_limit
-                         :themes themes})))
+                         :subjects subjects})))

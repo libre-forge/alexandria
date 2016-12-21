@@ -23,7 +23,7 @@
      pitch: String
      description: String
      member_limit: Int
-     themes: [String!]
+     subjects: [String!]
     __typename:String
   }
 

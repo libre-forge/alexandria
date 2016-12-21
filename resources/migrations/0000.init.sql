@@ -10,10 +10,17 @@ INSERT INTO liber (id, email, password, name) VALUES ('e02627de-2482-42ed-ab72-8
 INSERT INTO liber (id, email, password, name) VALUES ('2adb5684-4b20-45df-84f2-c4971dc42921', 'preston.doe@gmail.com', 'password1234', 'Preston McMillan');
 INSERT INTO liber (id, email, password, name) VALUES ('ee502a6b-2e9f-4b54-babf-97ada2981e9d', 'libreforge.user@gmail.com', 'password1234', 'Libre McMillan');
 
+CREATE TABLE liber_course(
+  liber uuid,
+  course uuid
+);
+
 CREATE TABLE course (
   id uuid PRIMARY KEY,
   title text,
+  pitch text,
   description text,
+  member_limit int DEFAULT 0,
   created_at timestamp DEFAULT CURRENT_DATE,
   created_by uuid);
 

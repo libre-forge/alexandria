@@ -14,6 +14,10 @@
   "Add sample courses."
   :up (mg/resource "migrations/0001.courses.sql"))
 
+(defmigration utils-0002
+  "Add users to courses."
+  :up (mg/resource "migrations/0002.liber_courses.sql"))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Entry point
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -21,7 +25,8 @@
 (def +migrations+
   {:name :libreforge-main
    :steps [[:0000 utils-0000]
-           [:0001 utils-0001]]})
+           [:0001 utils-0001]
+           [:0002 utils-0002]]})
 
 (defn migrate
   []

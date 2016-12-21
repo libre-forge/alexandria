@@ -39,7 +39,11 @@
   type Course {
     id: String
     title: String
+    pitch: String
     description: String
+    member_count: Int
+    member_limit: Int
+    members: [User]
     created_at: String
     created_by: String
     __typename:String

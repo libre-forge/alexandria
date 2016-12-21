@@ -9,7 +9,14 @@
 (defn create
   [context parent args]
   (let [input (get args "course")
+        pitch (get input "pitch")
+        member_limit (get input "member_limit")
         title (get input "title")
         description (get input "description")
+        themes (get input "themes")
         id (uuid/random)]
-    (courses/create id title description)))
+        (courses/create {:title title
+                         :pitch pitch
+                         :description description
+                         :member_limit member_limit
+                         :themes themes})))

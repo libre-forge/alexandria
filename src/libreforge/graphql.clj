@@ -20,7 +20,10 @@
 
   input CreateCourse {
      title: String
+     pitch: String
      description: String
+     member_limit: Int
+     themes: [String!]
     __typename:String
   }
 

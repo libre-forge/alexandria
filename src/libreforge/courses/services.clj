@@ -30,7 +30,7 @@
         status (get filter "byStatus")
         query (-> (dsl/select)
                   (dsl/from :course)
-                  (dsl/where ["course.title like '%?%' OR course.description like '%?%'" (data/nvl topic "")]
+                  (dsl/where ["course.title ilike '%?%' OR course.description ilike '%?%'" (data/nvl topic "")]
                              ["course.status = ?" (data/nvl status "active")]))
         courses (with-open [conn (db/connection)]
                   (sc/fetch conn query))]

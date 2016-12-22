@@ -12,5 +12,4 @@
   [context parent args]
   (let [id (uuid/from-string (get args "id"))
         subject (subjects/by-id id)]
-    (println (str "==>" subject))
     subject))

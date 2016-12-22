@@ -37,7 +37,6 @@
         course (with-open [conn (db/connection)]
                (sc/fetch-one conn query))
         enriched (merge subject {:course course})]
-    (println (str "enriched:" enriched))
     enriched))
 
 (defn list-by-course

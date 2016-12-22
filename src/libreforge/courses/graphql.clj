@@ -27,3 +27,9 @@
                          :description description
                          :member_limit member_limit
                          :subjects subjects})))
+
+(defn join
+  [context parent args]
+  (let [course (uuid/from-string (get args "course"))
+        member (uuid/from-string (get args "member"))]
+    (courses/join course member)))

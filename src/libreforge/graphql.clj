@@ -31,7 +31,8 @@
     (and (= "QueryRoot" type-name) (= "courses" field-name)) courses/list-all
     (and (= "QueryRoot" type-name) (= "course" field-name)) courses/by-id
     (and (= "MutationRoot" type-name) (= "login" field-name)) users/login
-    (and (= "MutationRoot" type-name) (= "course" field-name)) courses/create))
+    (and (= "MutationRoot" type-name) (= "join" field-name)) courses/join
+    (and (= "MutationRoot" type-name) (= "login" field-name)) users/login))
 
 (def context nil)
 

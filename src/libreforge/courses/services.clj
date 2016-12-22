@@ -83,3 +83,10 @@
                   (sc/fetch conn ["select * FROM liber l join liber_course lc ON l.id = lc.liber WHERE lc.course = ?" id]))
         course-w-members (assoc course :members members)]
     course-w-members))
+
+(defn join
+  [course member]
+  (let [params {:course course :liber member}
+        result (with-open [conn (db/connection)]
+                 (sc/fetch-one conn ["insert into liber_course (liber, course) VALUES (?, ?) returning course" member course]))]
+    (by-id (:course result))))

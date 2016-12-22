@@ -59,6 +59,7 @@ type QueryRoot {
 type MutationRoot {
     login(credentials: Credentials): Login
     course(course: CreateCourse): Course
+    join(course: String, member: String): Course
 }
 
 schema {

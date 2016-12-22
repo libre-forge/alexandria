@@ -7,3 +7,9 @@
   [context parent args]
   (let [course (uuid/from-string (get args "course"))]
     (subjects/list-by-course course)))
+
+(defn by-id
+  [context parent args]
+  (let [id (uuid/from-string (get args "id"))
+        subject (subjects/by-id id)]
+    subject))

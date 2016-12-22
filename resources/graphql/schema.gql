@@ -80,8 +80,9 @@ type Subject {
 type QueryRoot {
     user(email: String): User
     users: [User]
-    courses(filter: CourseFilter): [Course]
     course(id: String): Course
+    courses(filter: CourseFilter): [Course]
+    subject(id: String): Subject
     subjects(course: String): [Subject]
 }
 

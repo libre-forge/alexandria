@@ -31,6 +31,6 @@
                   (dsl/where ["id = ?" id]))
         resources {:resources (resources/list-by-subject id)}
         subject (with-open [conn (db/connection)]
-                  (sc/fetch-one conn query))
-        subject-w-resources (merge subject resources)]
-    subject-w-resources))
+                  (sc/fetch-one conn query))]
+        (-> (merge subject resources)
+            (resource-count))))

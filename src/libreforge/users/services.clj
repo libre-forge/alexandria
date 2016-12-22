@@ -32,6 +32,15 @@
     (with-open [conn (db/connection)]
       (sc/fetch-one conn query))))
 
+(defn find-by-id
+  "find a user by his id"
+  [id]
+  (let [query (-> (dsl/select)
+                  (dsl/from :liber)
+                  (dsl/where ["id = ?", id]))]
+    (with-open [conn (db/connection)]
+      (sc/fetch-one conn query))))
+
 (defn list-all
   "list all libers"
   []

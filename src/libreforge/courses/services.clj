@@ -2,6 +2,7 @@
   (:require [suricatta.core :as sc]
             [suricatta.dsl :as dsl]
             [suricatta.format :as fmt]
+            [libreforge.users.services :as users]
             [libreforge.util.data :as data]
             [libreforge.util.uuid :as uuid]
             [libreforge.db.connection :as db]))
@@ -81,7 +82,9 @@
                  (sc/fetch-one conn ["select * from course where id = ?" id]))
         members (with-open [conn (db/connection)]
                   (sc/fetch conn ["select * FROM liber l join liber_course lc ON l.id = lc.liber WHERE lc.course = ?" id]))
-        course-w-members (assoc course :members members)]
+        created-by (users/find-by-id (:created_by course))
+        course-w-owner (assoc course :created_by created-by)
+        course-w-members (assoc course-w-owner :members members)]
     course-w-members))
 
 (defn join

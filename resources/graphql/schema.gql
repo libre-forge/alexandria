@@ -41,6 +41,7 @@ type Course {
     title: String
     pitch: String
     description: String
+    status: String
     member_count: Int
     member_limit: Int
     members: [User]

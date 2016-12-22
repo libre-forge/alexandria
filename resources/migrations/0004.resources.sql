@@ -1,0 +1,1 @@
+INSERT INTO resource (id, title, mime, uri, description, subject, created_by) VALUES ('a571527f-d4b6-4cb0-8914-9c37d0a410f1', 'Data Science', 'img/jpg', 'http://indizen.com/wp-content/uploads/2015/10/data.science.image7_.jpg', 'data science image', 'ae04b5e9-fd7f-4775-8e8b-96835ba08a87', '588034cb-4c84-4f36-abcf-fa511aba0de3');

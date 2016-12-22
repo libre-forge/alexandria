@@ -22,11 +22,12 @@
         description (get input "description")
         subjects (get input "subjects")
         id (uuid/random)]
-        (courses/create {:title title
-                         :pitch pitch
-                         :description description
-                         :member_limit member_limit
-                         :subjects subjects})))
+    (courses/create {:id id
+                     :title title
+                     :pitch pitch
+                     :description description
+                     :member_limit member_limit
+                     :subjects subjects})))
 
 (defn join
   [context parent args]

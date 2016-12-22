@@ -42,8 +42,6 @@
                              ["course.status = ?" status]))
         courses (with-open [conn (db/connection)]
                   (sc/fetch conn query))]
-    (println (fmt/sql query))
-    (println (str "==>topic: " topic ", status: " status))
     (map fill-member-count courses)))
 
 (defn create-course

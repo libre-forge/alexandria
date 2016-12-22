@@ -5,6 +5,5 @@
 (defn list-by-course
   "list all subjects by course"
   [context parent args]
-  (let [:course (->(get args "course")
-                   (uuid/from-string))]
+  (let [course (uuid/from-string (get args "course"))]
     (subjects/list-by-course course)))

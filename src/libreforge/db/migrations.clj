@@ -18,6 +18,10 @@
   "Add users to courses."
   :up (mg/resource "migrations/0002.liber_courses.sql"))
 
+(defmigration utils-0003
+  "Add subjects to courses."
+  :up (mg/resource "migrations/0003.subjects.sql"))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Entry point
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -26,7 +30,8 @@
   {:name :libreforge-main
    :steps [[:0000 utils-0000]
            [:0001 utils-0001]
-           [:0002 utils-0002]]})
+           [:0002 utils-0002]
+           [:0003 utils-0003]]})
 
 (defn migrate
   []

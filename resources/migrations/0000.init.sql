@@ -27,10 +27,11 @@ CREATE TABLE course (
 
 CREATE TABLE subject (
   id uuid PRIMARY KEY,
+  description text,
   title text,
   course uuid,
   created_at timestamp DEFAULT CURRENT_DATE,
-  finished_at timestamp;
+  finished_at timestamp,
   sorder int,
   created_by uuid);
 

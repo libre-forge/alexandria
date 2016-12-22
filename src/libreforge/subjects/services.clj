@@ -14,6 +14,20 @@
         count (resources/count-by-subject id)]
     (merge count subject)))
 
+(defn now
+  []
+  (java.util.Date.))
+
+(defn set-status
+  [subject]
+  (let [date (:finished_at subject)
+        stat (if (nil? date)
+               "active"
+               (if (> (compare (now) date) 0)
+                 "finished"
+                 "ongoing"))]
+    (merge subject {:status stat})))
+
 (defn list-by-course
   "list all subjects by course"
   [course]
@@ -22,7 +36,8 @@
                   (dsl/where ["course = ?" course]))
         subjects (with-open [conn (db/connection)]
                    (sc/fetch conn query))]
-    (map resource-count subjects)))
+    (->>(map resource-count subjects)
+        (map set-status))))
 
 (defn by-id
   [id]
@@ -33,4 +48,5 @@
         subject (with-open [conn (db/connection)]
                   (sc/fetch-one conn query))]
         (-> (merge subject resources)
-            (resource-count))))
+            (resource-count)
+            (set-status))))

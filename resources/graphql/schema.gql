@@ -70,6 +70,7 @@ type Subject {
     course: Course
     resources: [Resource]
     order: Int
+    status: String
     resource_count: Int
     created_at: String
     finished_at: String

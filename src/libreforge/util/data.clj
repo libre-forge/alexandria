@@ -6,4 +6,4 @@
 
 (defn nvl
   [val alt]
-  (if (nil? val) val alt))
+  (if (clojure.string/blank? val) alt val))

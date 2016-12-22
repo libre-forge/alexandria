@@ -23,17 +23,26 @@
                   (sc/fetch conn query))]
     (map fill-member-count courses)))
 
+(defn wild
+  [param]
+  (str "%" param "%"))
+
 (defn list-all
   "list all courses"
   [filter]
-  (let [topic (get filter "byTopic")
-        status (get filter "byStatus")
+  (let [topic (->>(get filter "byTopic")
+                  (data/nvl "")
+                  (wild))
+        status (->>(get filter "byStatus")
+                   (data/nvl "active"))
         query (-> (dsl/select)
                   (dsl/from :course)
-                  (dsl/where ["course.title ilike '%?%' OR course.description ilike '%?%'" (data/nvl topic "")]
-                             ["course.status = ?" (data/nvl status "active")]))
+                  (dsl/where ["course.title ilike ? OR course.description ilike ?" topic topic]
+                             ["course.status = ?" status]))
         courses (with-open [conn (db/connection)]
                   (sc/fetch conn query))]
+    (println (fmt/sql query))
+    (println (str "==>topic: " topic ", status: " status))
     (map fill-member-count courses)))
 
 (defn create-course

@@ -28,6 +28,18 @@
                  "ongoing"))]
     (merge subject {:status stat})))
 
+(defn set-course
+  [subject]
+  (let [course (:course subject)
+        query (-> (dsl/select)
+                  (dsl/from :course)
+                  (dsl/where ["id = ?" course]))
+        course (with-open [conn (db/connection)]
+               (sc/fetch-one conn query))
+        enriched (merge subject {:course course})]
+    (println (str "enriched:" enriched))
+    enriched))
+
 (defn list-by-course
   "list all subjects by course"
   [course]
@@ -49,4 +61,5 @@
                   (sc/fetch-one conn query))]
         (-> (merge subject resources)
             (resource-count)
-            (set-status))))
+            (set-status)
+            (set-course))))

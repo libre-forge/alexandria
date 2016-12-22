@@ -10,6 +10,7 @@
    [libreforge.util.uuid :as uuid]
    [libreforge.util.io :as io]
    [libreforge.users.graphql :as users]
+   [libreforge.subjects.graphql :as subjects]
    [libreforge.courses.graphql :as courses]))
 
 (def schema-str
@@ -30,6 +31,7 @@
     (and (= "QueryRoot" type-name) (= "users" field-name)) users/list-all
     (and (= "QueryRoot" type-name) (= "courses" field-name)) courses/list-all
     (and (= "QueryRoot" type-name) (= "course" field-name)) courses/by-id
+    (and (= "QueryRoot" type-name) (= "subjects" field-name)) subjects/list-by-course
     (and (= "MutationRoot" type-name) (= "login" field-name)) users/login
     (and (= "MutationRoot" type-name) (= "join" field-name)) courses/join
     (and (= "MutationRoot" type-name) (= "login" field-name)) users/login))

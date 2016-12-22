@@ -40,6 +40,7 @@ type Course {
     id: String
     title: String
     pitch: String
+    status: String,
     description: String
     status: String
     member_count: Int
@@ -50,11 +51,38 @@ type Course {
     __typename:String
 }
 
+type Resource {
+    id: String
+    title: String
+    description: String
+    mime: String
+    uri: String
+    subject: String
+    created_at: String
+    created_by: String
+    __typename:String
+}
+
+type Subject {
+    id: String
+    title: String
+    description: String
+    course: Course
+    resources: [Resource]
+    order: Int
+    resource_count: Int
+    created_at: String
+    finished_at: String
+    created_by: String
+    __typename:String
+}
+
 type QueryRoot {
     user(email: String): User
     users: [User]
     courses(filter: CourseFilter): [Course]
     course(id: String): Course
+    subjects(course: String): [Subject]
 }
 
 type MutationRoot {

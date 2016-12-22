@@ -26,6 +26,7 @@ input CourseFilter {
 
 type Login {
     token: String
+    user: User
     __typename:String
 }
 

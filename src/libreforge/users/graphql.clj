@@ -14,6 +14,7 @@
 
 
 (def secret "mysecret")
+
 (defn login
   [context parent args]
   (let [credentials (get args "credentials")
@@ -21,5 +22,6 @@
         password (get credentials "password")
         user (users/find-login username password)]
     (if user
-      {:token (jwt/sign {:id (:id user)} secret)}
+      {:token (jwt/sign {:id (:id user)} secret)
+       :user user}
       {"token" "kk"})))

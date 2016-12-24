@@ -10,8 +10,7 @@
         query (-> (dsl/insert-into :liber)
                   (dsl/insert-values params)
                   (dsl/returning :id))]
-     (with-open [conn (db/connection)]
-       (sc/fetch conn query))))
+    (db/fetch query)))
 
 (defn find-login
   "checks credentials provided from login"
@@ -20,8 +19,7 @@
                   (dsl/from :liber)
                   (dsl/where ["email = ?", email]
                              ["password = ?", password]))]
-    (with-open [conn (db/connection)]
-      (sc/fetch-one conn query))))
+    (db/fetch-one query)))
 
 (defn find-by-email
   "find a user by his email"
@@ -29,8 +27,7 @@
   (let [query (-> (dsl/select)
                   (dsl/from :liber)
                   (dsl/where ["email = ?", email]))]
-    (with-open [conn (db/connection)]
-      (sc/fetch-one conn query))))
+    (db/fetch-one query)))
 
 (defn find-by-id
   "find a user by his id"
@@ -38,13 +35,11 @@
   (let [query (-> (dsl/select)
                   (dsl/from :liber)
                   (dsl/where ["id = ?", id]))]
-    (with-open [conn (db/connection)]
-      (sc/fetch-one conn query))))
+    (db/fetch-one query)))
 
 (defn list-all
   "list all libers"
   []
   (let [query (-> (dsl/select)
                   (dsl/from :liber))]
-    (with-open [conn (db/connection)]
-      (sc/fetch conn query))))
+    (db/fetch query)))

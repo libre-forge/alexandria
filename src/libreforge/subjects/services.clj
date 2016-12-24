@@ -34,8 +34,7 @@
         query (-> (dsl/select)
                   (dsl/from :course)
                   (dsl/where ["id = ?" course]))
-        course (with-open [conn (db/connection)]
-               (sc/fetch-one conn query))
+        course (db/fetch-one query)
         enriched (merge subject {:course course})]
     enriched))
 
@@ -45,10 +44,9 @@
   (let [query (-> (dsl/select)
                   (dsl/from :subject)
                   (dsl/where ["course = ?" course]))
-        subjects (with-open [conn (db/connection)]
-                   (sc/fetch conn query))]
-    (->>(map resource-count subjects)
-        (map set-status))))
+        subjects (db/fetch query)]
+    (->> (map resource-count subjects)
+         (map set-status))))
 
 (defn by-id
   [id]
@@ -56,8 +54,7 @@
                   (dsl/from :subject)
                   (dsl/where ["id = ?" id]))
         resources {:resources (resources/list-by-subject id)}
-        subject (with-open [conn (db/connection)]
-                  (sc/fetch-one conn query))]
+        subject (db/fetch-one query)]
         (-> (merge subject resources)
             (resource-count)
             (set-status)

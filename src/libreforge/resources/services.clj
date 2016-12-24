@@ -8,8 +8,7 @@
 
 (defn count-by-subject
   [subject]
-  (let [count (with-open [conn (db/connection)]
-                (sc/fetch-one conn ["select count(*) as resource_count from resource where subject = ?" subject]))]
+  (let [count (db/fetch-one ["select count(*) as resource_count from resource where subject = ?" subject])]
     count))
 
 (defn list-by-subject
@@ -17,5 +16,4 @@
   (let [query (-> (dsl/select)
                   (dsl/from :resource)
                   (dsl/where ["subject = ?" subject]))]
-    (with-open [conn (db/connection)]
-      (sc/fetch conn query))))
+    (db/fetch query)))

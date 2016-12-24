@@ -19,3 +19,13 @@
 (defn connection
   []
   (sc/context datasource))
+
+(defn fetch-one
+  [query]
+  (with-open [conn (connection)]
+    (sc/fetch-one conn query)))
+
+(defn fetch
+  [query]
+  (with-open [conn (connection)]
+    (sc/fetch conn query)))

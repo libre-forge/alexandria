@@ -4,6 +4,9 @@
             [catacumba.handlers.auth :as cauth]
             [catacumba.handlers.parse :as parse]
             [catacumba.handlers.misc :as misc]
+            [cheshire.core :as json]
+            [catacumba.http :as http]
+            [libreforge.util.http :as http-util]
             [libreforge.graphql :as graphql]
             [libreforge.users.handlers :as users]
             [libreforge.db.migrations :as mg])
@@ -14,12 +17,17 @@
                 :allow-methods #{:option :post :put :get :delete}           ;; optional
                 :allow-headers #{:x-requested-with :content-type}}) ;; optional
 
+(defn execute-graphql
+  "GraphQL endpoint"
+  [ctx]
+  (let [qy (->> ctx :data :query)
+        vs (->> ctx :data :variables)
+        rs (graphql/resolve nil qy vs)]
+    (-> (json/encode rs)
+        (http/ok {:content-type http-util/json-type}))))
+
 (def app-routes
   "all application endpoints"
   (ct/routes [[:any (parse/body-params)]
               [:any (misc/cors cors-conf)]
-              [:prefix "api"
-               [:post "auth/token" users/login]
-;;               [:any (cauth/auth users/auth-backend)]
-;;               [:any users/authorization]
-               [:post "graphql" graphql/mutations]]]))
+              [:post "graphql" execute-graphql]]))

@@ -10,6 +10,7 @@ input CreateCourse {
     description: String
     member_limit: Int
     subjects: [String!]
+    member: String
     __typename:String
 }
 

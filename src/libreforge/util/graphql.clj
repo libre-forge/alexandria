@@ -1,6 +1,7 @@
 (ns libreforge.util.graphql
   (:require
    [libreforge.util.io :as io]
+   [cheshire.core :as json]
    [graphql-clj.executor :as executor]
    [graphql-clj.parser :as parser]
    [graphql-clj.type :as type]
@@ -45,13 +46,23 @@
         parser/parse
         validator/validate-schema)))
 
+(defn keywordize-args
+  [fnx]
+  (if (not (nil? fnx))
+    (fn [ctx parent args]
+      (fnx ctx parent (clojure.walk/keywordize-keys args)))
+    fnx))
+
 (defn create-mappings
   "builds a dispatcher from the routing information"
   [routes]
   (let [decision-tree (parse-routes routes)]
     (fn [type field]
-      ;; #TODO (first should be transformed in a execution pipeline)
-      (first (get-in decision-tree (map keyword [type field]))))))
+      (let [pth (map keyword [type field])
+            fns (get-in decision-tree pth)
+            ;; #TODO (first should be transformed in a execution pipeline)
+            fnx (keywordize-args (first fns))]
+        fnx))))
 
 (defn create-resolver
   [schema mappings]

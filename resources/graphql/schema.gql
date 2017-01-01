@@ -5,12 +5,12 @@ input Credentials {
 }
 
 input CreateCourse {
-    title: String
-    pitch: String
+    title: String!
+    pitch: String!
     description: String
-    member_limit: Int
+    member_limit: Int!
     subjects: [String!]
-    member: String
+    created_by: String!
     __typename:String
 }
 
@@ -47,9 +47,8 @@ type Course {
     status: String
     member_count: Int
     member_limit: Int
-    members: [User]
     created_at: String
-    created_by: User
+    created_by: String
     __typename:String
 }
 
@@ -84,6 +83,8 @@ type QueryRoot {
     user(email: String): User
     users: [User]
     course(id: String): Course
+    courseOwner(course:String): User
+    courseMembers(course:String): [User]
     courses(filter: CourseFilter): [Course]
     subject(id: String): Subject
     subjects(course: String): [Subject]

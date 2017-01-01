@@ -7,3 +7,7 @@
 (defn nvl
   [val alt]
   (if (clojure.string/blank? val) alt val))
+
+(defn wild
+  [param]
+  (str "%" param "%"))

@@ -7,39 +7,27 @@
             [libreforge.util.uuid :as uuid]
             [libreforge.db.connection :as db]))
 
-(defn fill-member-count
-  "fills the number of members a given course has"
-  [course]
-  (let [id (:id course)
-        count (db/fetch-one ["select count(*) as member_count from liber_course where course = ?" id])]
-    (merge count course)))
-
-(defn list-all
-  "list all courses"
-  []
-  (let [query (-> (dsl/select)
-                  (dsl/from :course))
-        courses (db/fetch query)]
-    (map fill-member-count courses)))
-
-(defn wild
-  [param]
-  (str "%" param "%"))
-
 (defn list-all
   "list all courses"
   [filter]
-  (let [topic (->> (get filter "byTopic")
-                   (data/nvl "")
-                   (wild))
-        status (->> (get filter "byStatus")
-                    (data/nvl "active"))
-        query (-> (dsl/select)
-                  (dsl/from :course)
-                  (dsl/where ["course.title ilike ? OR course.description ilike ?" topic topic]
-                             ["course.status = ?" status]))
-        courses (db/fetch query)]
-    (map fill-member-count courses)))
+  (let [top (->> (:byTopic filter)
+                 (data/nvl "")
+                 (data/wild))
+        sts (->> (:byStatus filter)
+                 (data/nvl "active"))
+        qry (-> (dsl/select (dsl/field :id)
+                            (dsl/field :title)
+                            (dsl/field :pitch)
+                            (dsl/field :description)
+                            (dsl/field :status)
+                            (dsl/field :member_limit)
+                            (dsl/field :created_at)
+                            (dsl/field :created_by)
+                            (dsl/field "(select count(*) from liber_course where liber_course.course = course.id)" "member_count"))
+                (dsl/from :course)
+                (dsl/where ["course.title ilike ? OR course.description ilike ?" top top]
+                           ["course.status = ?" sts]))]
+    (db/fetch qry)))
 
 (defn create-course
   "creates a new course"
@@ -60,6 +48,7 @@
     (db/fetch-one query)))
 
 (defn create
+  "creates a new course"
   [params]
   (let [course-id (uuid/random)
         course (merge params {:id course-id})
@@ -69,14 +58,29 @@
       (create-subject course-id th))
     saved))
 
+(defn owner
+  "returns course owner"
+  [course]
+  (let [qry (-> (dsl/select)
+                (dsl/from :liber)
+                (dsl/join :course)
+                (dsl/on "course.created_by = liber.id"))]
+    (db/fetch-one qry)))
+
+(defn members
+  "returns course members"
+  [course]
+  (let [qry (-> (dsl/select)
+                (dsl/from :liber)
+                (dsl/join :liber_course)
+                (dsl/on "liber.id = liber_course.liber")
+                (dsl/where ["liber_course.course = ?" course]))]
+    (db/fetch qry)))
+
 (defn by-id
+  "returns a given course by id"
   [id]
-  (let [course (db/fetch-one ["select * from course where id = ?" id])
-        members (db/fetch ["select * FROM liber l join liber_course lc ON l.id = lc.liber WHERE lc.course = ?" id])
-        created-by (users/find-by-id (:created_by course))
-        course-w-owner (assoc course :created_by created-by)
-        course-w-members (assoc course-w-owner :members members)]
-    course-w-members))
+  (db/fetch-one ["select * from course where id = ?" id]))
 
 (defn join
   [course member]

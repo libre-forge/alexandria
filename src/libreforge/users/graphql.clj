@@ -9,7 +9,7 @@
 
 (defn find-by-email
   [context parent args]
-  (let [email (get args "email")]
+  (let [email (:email args)]
     (users/find-by-email email)))
 
 
@@ -17,9 +17,9 @@
 
 (defn login
   [context parent args]
-  (let [credentials (get args "credentials")
-        username (get credentials "username")
-        password (get credentials "password")
+  (let [credentials (:credentials args)
+        username (:username credentials)
+        password (:password credentials)
         user (users/find-login username password)]
     (if user
       {:token (jwt/sign {:id (:id user)} secret)

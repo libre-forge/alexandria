@@ -10,6 +10,8 @@
   [[:QueryRoot
     [:users users/find-by-email]
     [:course courses/by-id]
+    [:courseOwner courses/owner]
+    [:courseMembers courses/members]
     [:courses courses/list-all]
     [:subject subjects/by-id]
     [:subjects subjects/list-by-course]

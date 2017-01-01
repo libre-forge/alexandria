@@ -1,36 +1,37 @@
 (ns libreforge.courses.graphql
-  (:require [libreforge.courses.services :as courses]
-            [libreforge.util.uuid :as uuid]))
+  (:require
+   [libreforge.util.uuid :as uuid]
+   [libreforge.courses.services :as courses]))
 
 (defn list-all
   [context parent args]
-  (let [filter (get args "filter")
-        result (courses/list-all filter)]
-    result))
+  (let [filter (:filter args)]
+    (courses/list-all filter)))
 
 (defn by-id
   [context parent args]
-  (let [id (uuid/from-string (get args "id"))]
+  (let [id (uuid/from-string (:id args))]
     (courses/by-id id)))
+
+(defn owner
+  [context parent args]
+  (let [id (uuid/from-string (:course args))]
+    (courses/owner id)))
+
+(defn members
+  [context parent args]
+  (let [id (uuid/from-string (:course args))]
+    (courses/members id)))
 
 (defn create
   [context parent args]
-  (let [input (get args "course")
-        pitch (get input "pitch")
-        member_limit (get input "member_limit")
-        title (get input "title")
-        description (get input "description")
-        subjects (get input "subjects")
-        id (uuid/random)]
-    (courses/create {:id id
-                     :title title
-                     :pitch pitch
-                     :description description
-                     :member_limit member_limit
-                     :subjects subjects})))
+  (let [input (:course args)
+        owner (:created_by input)
+        course (merge input {:created_by (uuid/from-string owner)})]
+    (courses/create course)))
 
 (defn join
   [context parent args]
-  (let [course (uuid/from-string (get args "course"))
-        member (uuid/from-string (get args "member"))]
+  (let [course (uuid/from-string (:course args))
+        member (uuid/from-string (:member args))]
     (courses/join course member)))

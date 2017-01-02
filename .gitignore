@@ -4,3 +4,5 @@ set-env
 set-env.sh
 
 target/
+
+.lein-repl-history

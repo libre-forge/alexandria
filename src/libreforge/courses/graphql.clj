@@ -14,9 +14,10 @@
     (courses/by-id id)))
 
 (defn owner
+  "returns the course owner info"
   [context parent args]
-  (let [id (uuid/from-string (:course args))]
-    (courses/owner id)))
+  (let [course (:id parent)]
+    (users/load-creator-of :course course)))
 
 (defn members
   [context parent args]

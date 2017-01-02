@@ -48,7 +48,7 @@ type Course {
     member_count: Int
     member_limit: Int
     created_at: String
-    created_by: String
+    created_by: User
     __typename:String
 }
 

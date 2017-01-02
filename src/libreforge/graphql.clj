@@ -11,13 +11,14 @@
   [[:QueryRoot
     [:users users/find-by-email]
     [:course courses/by-id]
-    [:courseOwner courses/owner]
     [:courseMembers courses/members]
     [:courses courses/list-all]
     [:subject subjects/by-id]
     [:subjectsByCourse subjects/list-by-course]
     [:users users/list-all]]
    ;; Relationships
+   [:Course
+    [:created_by courses/owner]]
    [:Subject
     [:resources resources/list-by-subject]
     [:created_by subjects/owner]]

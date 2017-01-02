@@ -16,7 +16,7 @@
     [:courses courses/list-all]
     [:subject subjects/by-id]
     [:subjectResources resources/list-by-subject]
-    [:subjects subjects/list-by-course]
+    [:subjectsByCourse subjects/list-by-course]
     [:users users/list-all]]
    [:MutationRoot
     [:course courses/create]

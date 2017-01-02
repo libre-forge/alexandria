@@ -80,21 +80,23 @@ type Subject {
 }
 
 type QueryRoot {
-    user(email: String): User
+    user(email: String!): User
     users: [User]
-    course(id: String): Course
-    courseOwner(course:String): User
-    courseMembers(course:String): [User]
+
+    course(id: String!): Course
+    courseOwner(course:String!): User
+    courseMembers(course:String!): [User]
     courses(filter: CourseFilter): [Course]
-    subject(id: String): Subject
-    subjectResources(subject: String): [Resource]
-    subjects(course: String): [Subject]
+
+    subject(id: String!): Subject
+    subjectResources(subject: String!): [Resource]
+    subjectsByCourse(course: String!): [Subject]
 }
 
 type MutationRoot {
-    login(credentials: Credentials): Login
-    course(course: CreateCourse): Course
-    join(course: String, member: String): Course
+    login(credentials: Credentials!): Login
+    course(course: CreateCourse!): Course
+    join(course: String!, member: String!): Course
 }
 
 schema {

@@ -58,15 +58,6 @@
       (create-subject course-id th))
     saved))
 
-(defn owner
-  "returns course owner"
-  [course]
-  (let [qry (-> (dsl/select)
-                (dsl/from :liber)
-                (dsl/join :course)
-                (dsl/on "course.created_by = liber.id"))]
-    (db/fetch-one qry)))
-
 (defn members
   "returns course members"
   [course]

@@ -1,17 +1,9 @@
 (ns libreforge.resources.services
-  (:require [suricatta.core :as sc]
-            [suricatta.dsl :as dsl]
-            [suricatta.format :as fmt]
-            [libreforge.util.data :as data]
-            [libreforge.util.uuid :as uuid]
+  (:require [suricatta.dsl :as dsl]
             [libreforge.db.connection :as db]))
 
-(defn count-by-subject
-  [subject]
-  (let [count (db/fetch-one ["select count(*) as resource_count from resource where subject = ?" subject])]
-    count))
-
 (defn list-by-subject
+  "returns all resources of a given subject"
   [subject]
   (let [query (-> (dsl/select)
                   (dsl/from :resource)

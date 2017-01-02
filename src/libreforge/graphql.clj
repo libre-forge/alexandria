@@ -15,9 +15,13 @@
     [:courseMembers courses/members]
     [:courses courses/list-all]
     [:subject subjects/by-id]
-    [:subjectResources resources/list-by-subject]
     [:subjectsByCourse subjects/list-by-course]
     [:users users/list-all]]
+   ;; Relationships
+   [:Subject
+    [:resources resources/list-by-subject]
+    [:created_by subjects/owner]]
+   ;; Mutations
    [:MutationRoot
     [:course courses/create]
     [:login users/login]]])

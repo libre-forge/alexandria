@@ -2,7 +2,7 @@
   (:require [libreforge.resources.services :as resources]))
 
 (defn list-by-subject
-  "list all resources of a given subject"
+  "list all resources of a given subject parent"
   [ctx parent args]
-  (let [subject (:subject args)]
+  (let [subject (:id parent)]
     (resources/list-by-subject subject)))

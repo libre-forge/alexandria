@@ -69,13 +69,13 @@ type Subject {
     title: String
     description: String
     course: Course
-    resources: [Resource]
     order: Int
     status: String
+    resources: [Resource]
     resource_count: Int
     created_at: String
     finished_at: String
-    created_by: String
+    created_by: User
     __typename:String
 }
 
@@ -89,7 +89,6 @@ type QueryRoot {
     courses(filter: CourseFilter): [Course]
 
     subject(id: String!): Subject
-    subjectResources(subject: String!): [Resource]
     subjectsByCourse(course: String!): [Subject]
 }
 

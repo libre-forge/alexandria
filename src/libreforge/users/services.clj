@@ -43,3 +43,14 @@
   (let [query (-> (dsl/select)
                   (dsl/from :liber))]
     (db/fetch query)))
+
+(defn load-creator-of
+  "loads the created_by user info of a given record"
+  [type id]
+  (let [plt (name type)
+        qry (-> (dsl/select)
+                (dsl/from :liber)
+                (dsl/join type)
+                (dsl/on (str "liber.id = " plt ".created_by"))
+                (dsl/where [(str plt ".id = ?") id]))]
+    (db/fetch-one qry)))

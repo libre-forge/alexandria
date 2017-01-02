@@ -1,5 +1,0 @@
-(defn hello-world
-  [name]
-  (println (str "hello" name)))
-(hello-world "John")
-(quit)

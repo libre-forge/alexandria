@@ -9,7 +9,7 @@
     (subjects/list-by-course course)))
 
 (defn by-id
+  "returns a specific subject detail"
   [context parent args]
-  (let [id (uuid/from-string (:id args))
-        subject (subjects/by-id id)]
-    subject))
+  (let [id (uuid/from-string (:id args))]
+    (subjects/by-id id)))

@@ -3,7 +3,8 @@
    [libreforge.util.graphql :as graphql]
    [libreforge.users.graphql :as users]
    [libreforge.subjects.graphql :as subjects]
-   [libreforge.courses.graphql :as courses]))
+   [libreforge.courses.graphql :as courses]
+   [libreforge.resources.graphql :as resources]))
 
 (def routes
   "GraphQL routing definition"
@@ -14,6 +15,7 @@
     [:courseMembers courses/members]
     [:courses courses/list-all]
     [:subject subjects/by-id]
+    [:subjectResources resources/list-by-subject]
     [:subjects subjects/list-by-course]
     [:users users/list-all]]
    [:MutationRoot

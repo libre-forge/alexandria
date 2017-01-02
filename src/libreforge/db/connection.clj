@@ -1,5 +1,6 @@
 (ns libreforge.db.connection
   (:require [hikari-cp.core :as hikari]
+            [suricatta.dsl :as dsl]
             [suricatta.core :as sc]))
 
 (def ^javax.sql.DataSource
@@ -29,3 +30,10 @@
   [query]
   (with-open [conn (connection)]
     (sc/fetch conn query)))
+
+(defn find-by-id
+  [table id]
+  (let [qry (-> (dsl/select)
+                (dsl/from table)
+                (dsl/where ["id = ?" id]))]
+    (fetch-one qry)))

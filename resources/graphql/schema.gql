@@ -87,6 +87,7 @@ type QueryRoot {
     courseMembers(course:String): [User]
     courses(filter: CourseFilter): [Course]
     subject(id: String): Subject
+    subjectResources(subject: String): [Resource]
     subjects(course: String): [Subject]
 }
 

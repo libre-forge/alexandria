@@ -80,7 +80,7 @@
 (defn by-id
   "returns a given course by id"
   [id]
-  (db/fetch-one ["select * from course where id = ?" id]))
+  (db/find-by-id :course id))
 
 (defn join
   [course member]

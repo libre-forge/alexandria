@@ -1,6 +1,8 @@
 (ns libreforge.courses.graphql
   (:require
    [libreforge.util.uuid :as uuid]
+   [libreforge.users.services :as users]
+   [libreforge.subjects.services :as subjects]
    [libreforge.courses.services :as courses]))
 
 (defn list-all
@@ -12,17 +14,6 @@
   [context parent args]
   (let [id (uuid/from-string (:id args))]
     (courses/by-id id)))
-
-(defn owner
-  "returns the course owner info"
-  [context parent args]
-  (let [course (:id parent)]
-    (users/load-creator-of :course course)))
-
-(defn members
-  [context parent args]
-  (let [id (uuid/from-string (:course args))]
-    (courses/members id)))
 
 (defn create
   [context parent args]
@@ -36,3 +27,24 @@
   (let [course (uuid/from-string (:course args))
         member (uuid/from-string (:member args))]
     (courses/join course member)))
+
+;; ###################
+;; ## RELATIONSHIPS ##
+;; ###################
+
+(defn owner
+  "returns the course owner info"
+  [context parent args]
+  (let [course (:id parent)]
+    (users/load-creator-of :course course)))
+
+(defn members
+  [context parent args]
+  (let [id (uuid/from-string (:id parent))]
+    (courses/members id)))
+
+(defn subjects
+  "list all subjects by parent course"
+  [context parent args]
+  (let [course (:id parent)]
+    (subjects/list-by-course course)))

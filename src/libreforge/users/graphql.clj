@@ -12,7 +12,6 @@
   (let [email (:email args)]
     (users/find-by-email email)))
 
-
 (def secret "mysecret")
 
 (defn login

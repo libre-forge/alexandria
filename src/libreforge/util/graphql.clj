@@ -50,6 +50,7 @@
   [fnx]
   (if (not (nil? fnx))
     (fn [ctx parent args]
+      ;; (println (str "[" ctx ", " parent "," args "]"))
       (fnx ctx parent (clojure.walk/keywordize-keys args)))
     fnx))
 
@@ -58,6 +59,7 @@
   [routes]
   (let [decision-tree (parse-routes routes)]
     (fn [type field]
+      ;; (println (str "requesting:" "[" type ", " field "]"))
       (let [pth (map keyword [type field])
             fns (get-in decision-tree pth)
             ;; #TODO (first should be transformed in a execution pipeline)

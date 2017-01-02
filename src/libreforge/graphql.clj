@@ -9,18 +9,17 @@
 (def routes
   "GraphQL routing definition"
   [[:QueryRoot
-    [:users users/find-by-email]
+    [:user users/find-by-email]
     [:course courses/by-id]
-    [:courseMembers courses/members]
     [:courses courses/list-all]
-    [:subject subjects/by-id]
-    [:subjectsByCourse subjects/list-by-course]
-    [:users users/list-all]]
+    [:subject subjects/by-id]]
    ;; Relationships
    [:Course
-    [:created_by courses/owner]]
+    [:created_by courses/owner]
+    [:subjects courses/subjects]
+    [:members courses/members]]
    [:Subject
-    [:resources resources/list-by-subject]
+    [:resources subjects/resources]
     [:created_by subjects/owner]]
    ;; Mutations
    [:MutationRoot

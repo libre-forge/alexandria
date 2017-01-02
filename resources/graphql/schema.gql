@@ -45,8 +45,10 @@ type Course {
     status: String,
     description: String
     status: String
+    subjects: [Subject]
     member_count: Int
     member_limit: Int
+    members: [User]
     created_at: String
     created_by: User
     __typename:String
@@ -81,15 +83,9 @@ type Subject {
 
 type QueryRoot {
     user(email: String!): User
-    users: [User]
-
     course(id: String!): Course
-    courseOwner(course:String!): User
-    courseMembers(course:String!): [User]
     courses(filter: CourseFilter): [Course]
-
     subject(id: String!): Subject
-    subjectsByCourse(course: String!): [Subject]
 }
 
 type MutationRoot {

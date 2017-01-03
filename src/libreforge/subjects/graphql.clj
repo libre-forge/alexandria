@@ -10,6 +10,16 @@
   (let [id (uuid/from-string (:id args))]
     (subjects/by-id id)))
 
+(defn create
+  "creates a new course's subject"
+  [context parent args]
+  (let [input (:subject args)
+        course (:course input)
+        owner (:created_by input)
+        subject (merge input {:created_by (uuid/from-string owner)
+                              :course (uuid/from-string course)})]
+    (subjects/create subject)))
+
 ;; ###################
 ;; ## RELATIONSHIPS ##
 ;; ###################

@@ -44,3 +44,23 @@
   "returns a subject detail by its id"
   [id]
   (db/find-by-id :subject id))
+
+(defn create-only-w-title
+  "creates a subject from a given title"
+  [course-id title]
+  (let [id (uuid/random)
+        query (-> (dsl/insert-into :subject)
+                  (dsl/insert-values {:id id :course course-id :title title})
+                  (dsl/returning :id))]
+    (db/fetch-one query)))
+
+(defn create
+  "creates a new subject"
+  [subject]
+  (let [id (uuid/random)
+        subject (merge subject {:id id})
+        q (-> (dsl/insert-into :subject)
+              (dsl/insert-values subject)
+              (dsl/returning :id))
+        r (db/fetch-one q)]
+    (by-id (:id r))))

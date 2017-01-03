@@ -3,6 +3,7 @@
             [suricatta.dsl :as dsl]
             [suricatta.format :as fmt]
             [libreforge.users.services :as users]
+            [libreforge.subjects.services :as subjects]
             [libreforge.util.data :as data]
             [libreforge.util.uuid :as uuid]
             [libreforge.db.connection :as db]))
@@ -38,15 +39,6 @@
                   (dsl/returning :id))]
     (db/fetch-one query)))
 
-(defn create-subject
-  "creates a subject from a given title"
-  [course-id title]
-  (let [id (uuid/random)
-        query (-> (dsl/insert-into :subject)
-                  (dsl/insert-values {:id id :course course-id :title title})
-                  (dsl/returning :id))]
-    (db/fetch-one query)))
-
 (defn create
   "creates a new course"
   [params]
@@ -55,7 +47,7 @@
         saved (create-course course)
         subjects (:subjects course)]
     (doseq [th subjects]
-      (create-subject course-id th))
+      (subjects/create-only-w-title course-id th))
     saved))
 
 (defn members

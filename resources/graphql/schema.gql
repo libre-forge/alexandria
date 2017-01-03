@@ -14,6 +14,15 @@ input CreateCourse {
     __typename:String
 }
 
+input CreateSubject {
+    title: String!
+    description: String!
+    course: String!
+    order: Int!
+    finished_at: String
+    created_by: String!
+}
+
 enum CourseStatus {
     active
     ongoing
@@ -71,7 +80,7 @@ type Subject {
     title: String
     description: String
     course: Course
-    order: Int
+    entry_order: Int
     status: String
     resources: [Resource]
     resource_count: Int
@@ -90,7 +99,10 @@ type QueryRoot {
 
 type MutationRoot {
     login(credentials: Credentials!): Login
+
     course(course: CreateCourse!): Course
+    subject(subject: CreateSubject!): Subject
+
     join(course: String!, member: String!): Course
 }
 

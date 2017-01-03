@@ -24,6 +24,7 @@
    ;; Mutations
    [:MutationRoot
     [:course courses/create]
+    [:subject subjects/create]
     [:login users/login]]])
 
 (def mappings (graphql/create-mappings routes))

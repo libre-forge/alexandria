@@ -32,7 +32,7 @@ CREATE TABLE subject (
   course uuid,
   created_at timestamp DEFAULT CURRENT_DATE,
   finished_at timestamp,
-  "order" int,
+  entry_order int,
   created_by uuid);
 
 CREATE TABLE resource (

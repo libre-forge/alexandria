@@ -1,5 +1,6 @@
 (ns libreforge.resources.graphql
   (:require [libreforge.util.uuid :as uuid]
+            [libreforge.users.services :as users]
             [libreforge.resources.services :as resources]))
 
 (defn create
@@ -15,3 +16,9 @@
 ;; ###################
 ;; ## RELATIONSHIPS ##
 ;; ###################
+
+(defn owner
+  "returns the resource owner info"
+  [context parent args]
+  (let [resource (:id parent)]
+    (users/load-creator-of :resource resource)))

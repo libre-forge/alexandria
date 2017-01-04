@@ -80,7 +80,7 @@ type Resource {
     uri: String
     subject: String
     created_at: String
-    created_by: String
+    created_by: User
     __typename:String
 }
 

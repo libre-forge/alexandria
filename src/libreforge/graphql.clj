@@ -21,6 +21,8 @@
    [:Subject
     [:resources subjects/resources]
     [:created_by subjects/owner]]
+   [:Resource
+    [:created_by resources/owner]]
    ;; Mutations
    [:MutationRoot
     [:course courses/create]

@@ -23,6 +23,15 @@ input CreateSubject {
     created_by: String!
 }
 
+input CreateResource {
+    title: String!
+    description: String
+    type: String!
+    uri: String!
+    subject: String!
+    created_by: String!
+}
+
 enum CourseStatus {
     active
     ongoing
@@ -102,6 +111,7 @@ type MutationRoot {
 
     course(course: CreateCourse!): Course
     subject(subject: CreateSubject!): Subject
+    resource(resource: CreateResource!): Resource
 
     join(course: String!, member: String!): Course
 }

@@ -38,7 +38,7 @@ CREATE TABLE subject (
 CREATE TABLE resource (
   id uuid PRIMARY KEY,
   title text,
-  mime text,
+  type text,
   uri text,
   description text,
   subject uuid,

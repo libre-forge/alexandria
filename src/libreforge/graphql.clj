@@ -25,6 +25,7 @@
    [:MutationRoot
     [:course courses/create]
     [:subject subjects/create]
+    [:resource resources/create]
     [:login users/login]]])
 
 (def mappings (graphql/create-mappings routes))

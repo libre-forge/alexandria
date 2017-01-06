@@ -5,7 +5,7 @@
 
 (defn create
   "creates a new subject's resource"
-  [ctx parent args]
+  [{:keys [ctx parent args]}]
   (let [resource (:resource args)
         subject-id (uuid/from-string (:subject resource))
         created_by (uuid/from-string (:created_by resource))
@@ -19,6 +19,6 @@
 
 (defn owner
   "returns the resource owner info"
-  [context parent args]
+  [{:keys [ctx parent args]}]
   (let [resource (:id parent)]
     (users/load-creator-of :resource resource)))

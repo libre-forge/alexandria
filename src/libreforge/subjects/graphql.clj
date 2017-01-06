@@ -6,13 +6,13 @@
 
 (defn by-id
   "returns a specific subject detail"
-  [context parent args]
+  [{:keys [ctx parent args]}]
   (let [id (uuid/from-string (:id args))]
     (subjects/by-id id)))
 
 (defn create
   "creates a new course's subject"
-  [context parent args]
+  [{:keys [ctx parent args]}]
   (let [input (:subject args)
         course (:course input)
         owner (:created_by input)
@@ -26,12 +26,12 @@
 
 (defn owner
   "returns the subject owner info"
-  [context parent args]
+  [{:keys [ctx parent args]}]
   (let [subject (:id parent)]
     (users/load-creator-of :subject subject)))
 
 (defn resources
   "list all resources of a given subject parent"
-  [ctx parent args]
+  [{:keys [ctx parent args]}]
   (let [subject (:id parent)]
     (resources/list-by-subject subject)))

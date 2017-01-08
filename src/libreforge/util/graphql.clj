@@ -7,6 +7,67 @@
    [graphql-clj.type :as type]
    [graphql-clj.validator :as validator]))
 
+;; ##############################
+;; ## Pipeline Response Types ###
+;; ##############################
+
+;; Pipeline objetive is to apply set of rules to a given set of
+;; mappings. That would make it easier to apply, for instance
+;; authorization policies to a specific set of mappings, or maybe to
+;; add extra data to a subset of mappings.
+;;
+;; Pipeline will handle three types of function response:
+;;
+;; - Response: normal response. Ends pipeline.
+;; - ResponseError: error response. Ends pipeline.
+;; - Delegate: Adds data to context and make it available to further
+;; functions in the pipeline
+;;
+
+(defrecord Response [data])
+(defrecord ResponseError [data])
+(defrecord Delegate [data])
+
+(defn response
+  "builds a pipeline response"
+  [data]
+  (Response. data))
+
+(defn response-error
+  "builds a pipeline error"
+  [data]
+  (ResponseError. data))
+
+(defn delegate
+  "builds a pipeline delegate"
+  [data]
+  (Delegate. data))
+
+(defn is-response
+  "whether the result is a Response/ResponseError or not"
+  [r]
+  (let [t (type r)]
+    (or (= t Response) (= t ResponseError))))
+
+(defn is-delegate
+  "whether the result is a Delegate or not"
+  [r]
+  (= (type r) Delegate))
+
+(defn execute-pipeline
+  "compose all functions in the pipeline returning the combined outcome"
+  [fs env]
+  (reduce (fn [acc f]
+            (let [r (f acc)]
+              (cond
+                (is-response r) (reduced r)
+                (is-delegate r) (update-in acc [:ctx] merge (:data r))
+                :else (reduced (response r))))) env fs))
+
+;; ##############################
+;; ## GraphQL mappings building #
+;; ##############################
+
 (defn update-fns
   "updates current aggregated functions to the pipeline"
   [m fns]
@@ -40,33 +101,40 @@
                 (merge acc (parse-type val {:fns general-fn}))))) {} routes))
 
 (defn load-schema
+  "loads schema from classpath"
   [class-path]
   (let [schema-str (io/read-resource class-path)]
     (-> schema-str
         parser/parse
         validator/validate-schema)))
 
-(defn keywordize-args
-  [fnx]
-  (if (not (nil? fnx))
-    (fn [ctx parent args]
-      ;; (println (str "[" ctx ", " parent "," args "]"))
-      (fnx ctx parent (clojure.walk/keywordize-keys args)))
-    fnx))
+(defn to-env
+  "combines context parent and arguments in an environment map"
+  [ctx parent args]
+  {:ctx ctx
+   :parent parent
+   :args (clojure.walk/keywordize-keys args)})
+
+(defn build-graphql-fn
+  "converts a graphql-clj call to a env-response function execution"
+  [fns]
+  (fn [ctx parent args]
+    (let [env (to-env ctx parent args)]
+      (:data (execute-pipeline fns env)))))
 
 (defn create-mappings
   "builds a dispatcher from the routing information"
   [routes]
   (let [decision-tree (parse-routes routes)]
     (fn [type field]
-      ;; (println (str "requesting:" "[" type ", " field "]"))
       (let [pth (map keyword [type field])
-            fns (get-in decision-tree pth)
-            ;; #TODO (first should be transformed in a execution pipeline)
-            fnx (keywordize-args (first fns))]
-        fnx))))
+            fns (get-in decision-tree pth)]
+        (if (nil? fns)
+          nil
+          (build-graphql-fn fns))))))
 
 (defn create-resolver
+  "Creates a function resolver depending on schema and mappings"
   [schema mappings]
   (fn [ctx query vars]
     (executor/execute ctx schema mappings query vars)))

@@ -29,7 +29,7 @@
   (let [query (-> (dsl/select (dsl/field :id)
                               (dsl/field :title)
                               (dsl/field :description)
-                              (dsl/field "\"order\"" "order")
+                              (dsl/field :entry_order)
                               (dsl/field :course)
                               (dsl/field :created_at)
                               (dsl/field :finished_at)

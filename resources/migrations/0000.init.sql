@@ -12,7 +12,8 @@ INSERT INTO liber (id, email, password, name) VALUES ('ee502a6b-2e9f-4b54-babf-9
 
 CREATE TABLE liber_course(
   liber uuid,
-  course uuid
+  course uuid,
+  PRIMARY KEY (liber, course)
 );
 
 CREATE TABLE course (

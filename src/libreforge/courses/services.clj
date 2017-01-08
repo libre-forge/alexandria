@@ -68,5 +68,5 @@
 (defn join
   [course member]
   (let [params {:course course :liber member}
-        result (db/fetch-one ["insert into liber_course (liber, course) VALUES (?, ?) returning course" member course])]
+        result (db/fetch-one ["insert into liber_course (liber, course) VALUES (?, ?) ON CONFLICT (liber, course) DO UPDATE SET liber = EXCLUDED.liber returning course" member course])]
     (by-id (:course result))))

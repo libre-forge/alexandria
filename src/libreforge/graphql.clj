@@ -26,6 +26,7 @@
    ;; Mutations
    [:MutationRoot
     [:course courses/create]
+    [:join courses/join]
     [:subject subjects/create]
     [:resource resources/create]
     [:login users/login]]])

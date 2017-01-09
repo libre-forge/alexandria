@@ -25,7 +25,7 @@
 ;;
 
 (defrecord Response [data])
-(defrecord ResponseError [data])
+(defrecord ResponseError [errors])
 (defrecord Delegate [data])
 
 (defn response
@@ -33,21 +33,31 @@
   [data]
   (Response. data))
 
-(defn response-error
+(defn error
   "builds a pipeline error"
-  [data]
-  (ResponseError. data))
+  [error]
+  (let [errors [error]]
+    (ResponseError. errors)))
+
+(defn errors
+  "builds a set of pipeline errors"
+  [errors]
+  (ResponseError. errors))
 
 (defn delegate
   "builds a pipeline delegate"
-  [data]
-  (Delegate. data))
+  ([] (Delegate. {}))
+  ([data] (Delegate. data)))
 
 (defn is-response
-  "whether the result is a Response/ResponseError or not"
+  "whether the result is a Response or not"
   [r]
-  (let [t (type r)]
-    (or (= t Response) (= t ResponseError))))
+  (= (type r) Response))
+
+(defn is-error
+  "whether the result is a ResponseError or not"
+  [r]
+  (= (type r) ResponseError))
 
 (defn is-delegate
   "whether the result is a Delegate or not"
@@ -61,6 +71,7 @@
             (let [r (f acc)]
               (cond
                 (is-response r) (reduced r)
+                (is-error r) (throw (ex-info "" r))
                 (is-delegate r) (update-in acc [:ctx] merge (:data r))
                 :else (reduced (response r))))) env fs))
 

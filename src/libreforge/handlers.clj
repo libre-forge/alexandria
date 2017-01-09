@@ -21,9 +21,10 @@
   "GraphQL endpoint"
   [ctx]
   (let [mp (:data ctx)
+        hs (:headers ctx)
         qy (get-in mp ["query"])
         vs (get-in mp ["variables"])
-        rs (graphql/resolve nil qy vs)]
+        rs (graphql/resolve hs qy vs)]
     (-> (json/encode rs)
         (http/ok {:content-type http-util/json-type}))))
 

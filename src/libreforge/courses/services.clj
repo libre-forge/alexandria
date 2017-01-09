@@ -6,7 +6,7 @@
             [libreforge.subjects.services :as subjects]
             [libreforge.util.data :as data]
             [libreforge.util.uuid :as uuid]
-            [libreforge.db.connection :as db]))
+            [libreforge.db.common :as db]))
 
 (defn list-all
   "list all courses"

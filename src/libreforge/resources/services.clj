@@ -1,7 +1,7 @@
 (ns libreforge.resources.services
   (:require [suricatta.dsl :as dsl]
             [libreforge.util.uuid :as uuid]
-            [libreforge.db.connection :as db]))
+            [libreforge.db.common :as db]))
 
 (defn list-by-subject
   "returns all resources of a given subject"

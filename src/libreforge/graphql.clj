@@ -32,5 +32,5 @@
     [:login users/login]]])
 
 (def mappings (graphql/create-mappings routes))
-(def schema (graphql/load-schema "graphql/schema.gql"))
+(def schema (graphql/load-schema "graphql/schema.graphql"))
 (def resolve (graphql/create-resolver schema mappings))

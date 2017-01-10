@@ -30,6 +30,7 @@
 
 (def app-routes
   "all application endpoints"
-  (ct/routes [[:any (parse/body-params)]
+  (ct/routes [[:assets "assets" {:dir "public"}]
+              [:any (parse/body-params)]
               [:any (misc/cors cors-conf)]
               [:post "graphql" execute-graphql]]))

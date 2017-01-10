@@ -7,5 +7,6 @@
 (defn -main
   "application's entry point"
   [& args]
-  (ct/run-server handlers/app-routes {:port 3030})
+  (ct/run-server handlers/app-routes {:port 3030
+                                      :marker-file "alexandria.dir"})
   (mg/migrate))

@@ -21,14 +21,17 @@
   "GraphQL endpoint"
   [ctx]
   (let [mp (:data ctx)
+        hs (:headers ctx)
         qy (get-in mp ["query"])
-        vs (get-in mp ["variables"])
-        rs (graphql/resolve nil qy vs)]
+        vs (-> (get-in mp ["variables"])
+               (json/parse-string))
+        rs (graphql/resolve hs qy vs)]
     (-> (json/encode rs)
         (http/ok {:content-type http-util/json-type}))))
 
 (def app-routes
   "all application endpoints"
-  (ct/routes [[:any (parse/body-params)]
+  (ct/routes [[:assets "assets" {:dir "public"}]
+              [:any (parse/body-params)]
               [:any (misc/cors cors-conf)]
               [:post "graphql" execute-graphql]]))

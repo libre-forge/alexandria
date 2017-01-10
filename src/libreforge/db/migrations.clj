@@ -1,6 +1,7 @@
 (ns libreforge.db.migrations
   (:require [migrante.core :as mg :refer (defmigration)]
-            [libreforge.db.connection :as db]))
+            [libreforge.db.connection :as conn]
+            [libreforge.db.common :as db]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Migrations
@@ -41,6 +42,6 @@
 (defn migrate
   []
   (let [options (:migrations {})]
-    (with-open [mctx (mg/context db/datasource options)]
+    (with-open [mctx (mg/context conn/datasource options)]
       (mg/migrate mctx +migrations+)
       nil)))

@@ -1,7 +1,7 @@
 (ns libreforge.users.services
   (:require [suricatta.core :as sc]
             [suricatta.dsl :as dsl]
-            [libreforge.db.connection :as db]))
+            [libreforge.db.common :as db]))
 
 (defn create-user
   "creates a new user"

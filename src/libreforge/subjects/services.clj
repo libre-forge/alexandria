@@ -5,7 +5,7 @@
             [libreforge.util.data :as data]
             [libreforge.util.uuid :as uuid]
             [libreforge.resources.services :as resources]
-            [libreforge.db.connection :as db]))
+            [libreforge.db.common :as db]))
 
 (defn now
   "returns the current date"

@@ -20,20 +20,3 @@
 (defn connection
   []
   (sc/context datasource))
-
-(defn fetch-one
-  [query]
-  (with-open [conn (connection)]
-    (sc/fetch-one conn query)))
-
-(defn fetch
-  [query]
-  (with-open [conn (connection)]
-    (sc/fetch conn query)))
-
-(defn find-by-id
-  [table id]
-  (let [qry (-> (dsl/select)
-                (dsl/from table)
-                (dsl/where ["id = ?" id]))]
-    (fetch-one qry)))

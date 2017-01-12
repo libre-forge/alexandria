@@ -4,7 +4,8 @@
    [libreforge.util.graphql :as g]
    [libreforge.users.services :as users]
    [libreforge.subjects.services :as subjects]
-   [libreforge.courses.services :as courses]))
+   [libreforge.courses.services :as courses]
+   [libreforge.auth.graphql :as auth]))
 
 (defn list-all
   [env]
@@ -12,20 +13,21 @@
     (courses/list-all filter)))
 
 (defn by-id
-  [{{:keys [id :id]} :args}]
+  [{{:keys [id]} :args}]
   (let [uuid (uuid/from-string id)]
     (courses/by-id uuid)))
 
 (defn create
-  [{{:keys [course :course]} :args}]
-  (let [owner (:created_by course)
-        course (merge course {:created_by (uuid/from-string owner)})]
+  [{:keys [args ctx]}]
+  (let [owner (auth/user-id ctx)
+        input (:course args)
+        course (merge input {:created_by owner})]
     (courses/create course)))
 
 (defn join
-  [{:keys [args :args]}]
-  (let [course (uuid/from-string (:course args))
-        member (uuid/from-string (:member args))]
+  [{:keys [args ctx]}]
+  (let [member (auth/user-id ctx)
+        course (uuid/from-string (:course args))]
     (courses/join course member)))
 
 ;; ###################

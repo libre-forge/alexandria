@@ -1,6 +1,7 @@
 (ns libreforge.auth.graphql
   (:require [libreforge.users.services :as users]
             [libreforge.util.graphql :as g]
+            [libreforge.util.uuid :as uuid]
             [clojure.string :as st]
             [cheshire.core :as json]
             [buddy.sign.jwt :as jwt]))
@@ -23,6 +24,13 @@
       (g/error {:error "invalid username or password"})
       (g/response {:token (create-token user secret) :user user}))))
 
+(defn user-id
+  "gets user UUID from GraphQL context"
+  [ctx]
+  (let [id (get-in ctx [:user :id])]
+    (if (not (nil? id))
+      (uuid/from-string id)
+      id)))
 
 ;; ####################
 ;; #### DELEGATES #####

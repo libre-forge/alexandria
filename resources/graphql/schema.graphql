@@ -10,7 +10,6 @@ input CreateCourse {
     description: String
     member_limit: Int!
     subjects: [String!]
-    created_by: String!
     __typename:String
 }
 
@@ -113,7 +112,7 @@ type MutationRoot {
     subject(subject: CreateSubject!): Subject
     resource(resource: CreateResource!): Resource
 
-    join(course: String!, member: String!): Course
+    join(course: String!): Course
 }
 
 schema {

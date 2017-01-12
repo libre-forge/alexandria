@@ -31,7 +31,10 @@
 
 (def app-routes
   "all application endpoints"
-  (ct/routes [[:assets "assets" {:dir "public"}]
+  (ct/routes [[:assets "" {:dir "public"
+                           :indexes ["index.html"]}]
+              [:assets "graphql/schema" {:dir "graphql"
+                                         :indexes ["schema.graphql"]}]
               [:any (parse/body-params)]
               [:any (misc/cors cors-conf)]
               [:post "graphql" execute-graphql]]))

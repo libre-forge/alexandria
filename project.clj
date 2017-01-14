@@ -5,7 +5,7 @@
             :url "https://www.apache.org/licenses/LICENSE-2.0"}
 
   :source-paths ["src"]
-  :main "libreforge.app"
+  :main libreforge.app
  :dependencies [[org.clojure/clojure "1.9.0-alpha14"]
                 [org.clojure/tools.logging "0.3.1"]
                 [buddy "1.2.0"]

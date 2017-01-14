@@ -12,15 +12,6 @@
                   (dsl/returning :id))]
     (db/fetch query)))
 
-(defn find-login
-  "checks credentials provided from login"
-  [email password]
-  (let [query (-> (dsl/select)
-                  (dsl/from :liber)
-                  (dsl/where ["email = ?", email]
-                             ["password = ?", password]))]
-    (db/fetch-one query)))
-
 (defn find-by-email
   "find a user by his email"
   [email]

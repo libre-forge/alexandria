@@ -8,7 +8,6 @@
             [libreforge.util.handlers :as parse]
             [libreforge.util.http :as http-util]
             [libreforge.graphql :as graphql]
-            [libreforge.users.handlers :as users]
             [libreforge.db.migrations :as mg])
   (:gen-class))
 

@@ -4,6 +4,7 @@
             [libreforge.util.uuid :as uuid]
             [clojure.string :as st]
             [cheshire.core :as json]
+            [buddy.hashers :as hs]
             [buddy.sign.jwt :as jwt]))
 
 ;; application's secret
@@ -15,14 +16,15 @@
   (jwt/sign {:id (:id user)} secret))
 
 (defn login
-  "application authentication mechanism"
+  "application's authentication mechanism"
   [{{:keys [credentials]} :args}]
   (let [uname (:username credentials)
         pword (:password credentials)
-        user (users/find-login uname pword)]
-    (if (nil? user)
-      (g/error {:error "invalid username or password"})
-      (g/response {:token (create-token user secret) :user user}))))
+        user (users/find-by-email uname)
+        valid (hs/check pword (:password user))]
+    (if valid
+      (g/response {:token (create-token user secret) :user user})
+      (g/error {:error "invalid username or password"}))))
 
 (defn user-id
   "gets user UUID from GraphQL context"

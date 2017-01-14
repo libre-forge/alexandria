@@ -2,7 +2,8 @@
   (:require [libreforge.util.uuid :as uuid]
             [libreforge.users.services :as users]
             [libreforge.resources.services :as resources]
-            [libreforge.subjects.services :as subjects]))
+            [libreforge.subjects.services :as subjects]
+            [libreforge.auth.graphql :as auth]))
 
 (defn by-id
   "returns a specific subject detail"
@@ -15,8 +16,8 @@
   [{:keys [ctx parent args]}]
   (let [input (:subject args)
         course (:course input)
-        owner (:created_by input)
-        subject (merge input {:created_by (uuid/from-string owner)
+        owner (auth/user-id ctx)
+        subject (merge input {:created_by owner
                               :course (uuid/from-string course)})]
     (subjects/create subject)))
 

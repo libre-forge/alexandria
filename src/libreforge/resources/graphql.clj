@@ -1,16 +1,17 @@
 (ns libreforge.resources.graphql
   (:require [libreforge.util.uuid :as uuid]
             [libreforge.users.services :as users]
-            [libreforge.resources.services :as resources]))
+            [libreforge.resources.services :as resources]
+            [libreforge.auth.graphql :as auth]))
 
 (defn create
   "creates a new subject's resource"
   [{:keys [ctx parent args]}]
   (let [resource (:resource args)
         subject-id (uuid/from-string (:subject resource))
-        created_by (uuid/from-string (:created_by resource))
+        owner (auth/user-id ctx)
         resource (merge resource {:subject subject-id
-                                  :created_by created_by})]
+                                  :created_by owner})]
     (resources/create resource)))
 
 ;; ###################

@@ -7,28 +7,11 @@
    [libreforge.courses.services :as courses]
    [libreforge.auth.graphql :as auth]))
 
-(defn to-node
-  [record]
-  {:node record})
-
-(defn convert-to-edges
-  [result]
-  (let [totalCount (if (empty? result)
-                     0
-                     (:total_count (first result)))
-        edges (map to-node result)
-        firstRow (:id (first result))
-        lastRow (:id (last result))]
-    {:totalCount totalCount
-     :edges edges
-     :pageInfo {:startCursor firstRow
-                :endCursor lastRow}}))
-
 (defn list-all
   [env]
   (let [filter (get-in env [:args :filter])]
     (let [res (courses/list-all filter)]
-      (convert-to-edges res))))
+      (g/convert-to-edges res))))
 
 (defn by-id
   [{{:keys [id]} :args}]

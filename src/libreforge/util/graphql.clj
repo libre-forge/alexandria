@@ -149,3 +149,24 @@
   [schema mappings]
   (fn [ctx query vars]
     (executor/execute ctx schema mappings query vars)))
+
+;; ##############################
+;; ## GraphQL edges responses ###
+;; ##############################
+
+(defn to-node
+  [record]
+  {:node record})
+
+(defn convert-to-edges
+  [result]
+  (let [totalCount (if (empty? result)
+                     0
+                     (:total_count (first result)))
+        edges (map to-node result)
+        firstRow (:id (first result))
+        lastRow (:id (last result))]
+    {:totalCount totalCount
+     :edges edges
+     :pageInfo {:startCursor firstRow
+                :endCursor lastRow}}))

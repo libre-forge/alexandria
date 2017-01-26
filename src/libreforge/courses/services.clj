@@ -24,10 +24,12 @@
                             (dsl/field :member_limit)
                             (dsl/field :created_at)
                             (dsl/field :created_by)
+                            (dsl/field "count(*) OVER ()" "total_count")
                             (dsl/field "(select count(*) from liber_course where liber_course.course = course.id)" "member_count"))
                 (dsl/from :course)
                 (dsl/where ["course.title ilike ? OR course.description ilike ?" top top]
-                           ["course.status = ?" sts]))]
+                           ["course.status = ?" sts])
+                (dsl/order-by (dsl/field :id)))]
     (db/fetch qry)))
 
 (defn create-course

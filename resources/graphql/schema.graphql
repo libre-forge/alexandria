@@ -71,6 +71,22 @@ type Course {
     __typename:String
 }
 
+type CourseResult {
+  totalCount: Int
+  pageInfo: PageInfo
+  edges: [CourseNode]
+}
+
+type CourseNode {
+  node: Course
+  cursor: String!
+}
+
+type PageInfo {
+  startCursor: String
+  endCursor: String
+}
+
 type Resource {
     id: String
     title: String
@@ -101,7 +117,7 @@ type Subject {
 type Query {
     user(email: String!): User
     course(id: String!): Course
-    courses(filter: CourseFilter): [Course]
+    courses(filter: CourseFilter): CourseResult
     subject(id: String!): Subject
 }
 

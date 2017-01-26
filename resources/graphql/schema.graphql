@@ -98,14 +98,14 @@ type Subject {
     __typename:String
 }
 
-type QueryRoot {
+type Query {
     user(email: String!): User
     course(id: String!): Course
     courses(filter: CourseFilter): [Course]
     subject(id: String!): Subject
 }
 
-type MutationRoot {
+type Mutation {
     login(credentials: Credentials!): Login
 
     course(course: CreateCourse!): Course
@@ -116,6 +116,6 @@ type MutationRoot {
 }
 
 schema {
-    query: QueryRoot
-    mutation: MutationRoot
+    query: Query
+    mutation: Mutation
 }

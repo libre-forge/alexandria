@@ -40,6 +40,8 @@ enum CourseStatus {
 input CourseFilter {
     byTopic: String
     byStatus: CourseStatus
+    first: Int
+    after: Int
 }
 
 type Login {

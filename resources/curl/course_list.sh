@@ -1,6 +1,10 @@
 curl -X POST -H "Content-Type: application/json" -d '
 {
-    "query": "query QueryByTopic($filter: CourseFilter){courses(filter: $filter){title}}",
+    "query": "query QueryByTopic($filter: CourseFilter, first: Int, after: String){
+                    courses(filter: $filter, first: $first, after: $after){
+                       title
+                    }
+               }",
      "variables": {
          "filter": {
             "byTopic": "data"

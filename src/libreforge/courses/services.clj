@@ -8,14 +8,24 @@
             [libreforge.util.uuid :as uuid]
             [libreforge.db.common :as db]))
 
+(defn by-topic-filter
+  [filter]
+  (->> (:byTopic filter)
+                 (data/nvl "")
+                 (data/wild)))
+
+(defn by-status-filter
+  [filter]
+  (->> (:byStatus filter)
+                 (data/nvl "active")))
+
 (defn list-all
   "list all courses"
   [filter]
-  (let [top (->> (:byTopic filter)
-                 (data/nvl "")
-                 (data/wild))
-        sts (->> (:byStatus filter)
-                 (data/nvl "active"))
+  (let [top (by-topic-filter filter)
+        sts (by-status-filter filter)
+        first (:first filter)
+        after (:after filter)
         qry (-> (dsl/select (dsl/field :id)
                             (dsl/field :title)
                             (dsl/field :pitch)
@@ -29,7 +39,9 @@
                 (dsl/from :course)
                 (dsl/where ["course.title ilike ? OR course.description ilike ?" top top]
                            ["course.status = ?" sts])
-                (dsl/order-by (dsl/field :id)))]
+                (dsl/limit first)
+                (dsl/offset after)
+                (dsl/order-by [:id :desc]))]
     (db/fetch qry)))
 
 (defn create-course

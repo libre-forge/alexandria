@@ -5,7 +5,8 @@
    [graphql-clj.executor :as executor]
    [graphql-clj.parser :as parser]
    [graphql-clj.type :as type]
-   [graphql-clj.validator :as validator]))
+   [graphql-clj.validator :as validator]
+   [libreforge.util.data :as data]))
 
 ;; ##############################
 ;; ## Pipeline Response Types ###
@@ -156,7 +157,10 @@
 
 (defn to-node
   [record]
-  {:node record})
+  {:node record
+   :cursor (-> (:id record)
+               (str)
+               (data/str->base64))})
 
 (defn convert-to-edges
   [result]
@@ -164,9 +168,19 @@
                      0
                      (:total_count (first result)))
         edges (map to-node result)
-        firstRow (:id (first result))
-        lastRow (:id (last result))]
+        firstRow (-> (:id (first result))
+                     (str)
+                     (data/str->base64))
+        lastRow (-> (:id (last result))
+                    (str)
+                    (data/str->base64))]
     {:totalCount totalCount
      :edges edges
      :pageInfo {:startCursor firstRow
                 :endCursor lastRow}}))
+
+
+(defn decode-pagination
+  [pagination]
+  (-> (update pagination :before data/base64->str)
+      (update :after data/base64->str)))

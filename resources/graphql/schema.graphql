@@ -40,8 +40,6 @@ enum CourseStatus {
 input CourseFilter {
     byTopic: String
     byStatus: CourseStatus
-    first: Int
-    after: Int
 }
 
 type Login {
@@ -71,6 +69,13 @@ type Course {
     created_at: String
     created_by: User
     __typename:String
+}
+
+input Pagination {
+  first: Int
+  last: Int
+  before: String
+  after: String
 }
 
 type CourseResult {
@@ -119,7 +124,7 @@ type Subject {
 type Query {
     user(email: String!): User
     course(id: String!): Course
-    courses(filter: CourseFilter): CourseResult
+    courses(filter: CourseFilter, pagination: Pagination): CourseResult
     subject(id: String!): Subject
 }
 

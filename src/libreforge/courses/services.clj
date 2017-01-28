@@ -8,41 +8,82 @@
             [libreforge.util.uuid :as uuid]
             [libreforge.db.common :as db]))
 
-(defn by-topic-filter
-  [filter]
-  (->> (:byTopic filter)
-                 (data/nvl "")
-                 (data/wild)))
+(defn add-pagination
+  "abstracts how pagination is done"
+  [query pagination]
+  (let [fst (:first pagination)
+        aft (:after pagination)
+        las (:last pagination)
+        bef (:before pagination)]
+    (cond
+      ;; both last & before are present
+      (and (not (nil? las)) (not (nil? bef)))
+      (-> query
+          (dsl/where ["id < ?" (uuid/from-string bef)])
+          (dsl/limit las)
+          (dsl/order-by [:id :asc]))
+      ;; only before is present
+      (not (nil? bef))
+      (-> query
+          (dsl/where ["id < ?" (uuid/from-string bef)])
+          (dsl/limit 10)
+          (dsl/order-by [:id :asc]))
+      ;; only last is present
+      (not (nil? las))
+      (-> query
+          (dsl/limit las)
+          (dsl/order-by [:id :desc]))
+      ;; both first & after are present
+      (and (not (nil? fst)) (not (nil? aft)))
+      (-> query
+          (dsl/where ["id > ?" (uuid/from-string aft)])
+          (dsl/limit fst)
+          (dsl/order-by [:id :asc]))
+      ;; only after is present
+      (not (nil? aft))
+      (-> query
+          (dsl/where ["id > ?" (uuid/from-string aft)])
+          (dsl/limit 10)
+          (dsl/order-by [:id :asc]))
+      ;; only first is present
+      (not (nil? fst))
+      (-> query
+          (dsl/limit fst)
+          (dsl/offset 0)
+          (dsl/order-by [:id :asc]))
+      ;; no client pagination is present
+      :else
+      (-> query
+          (dsl/limit 10)
+          (dsl/offset 0)
+          (dsl/order-by [:id :asc])))))
 
-(defn by-status-filter
-  [filter]
-  (->> (:byStatus filter)
-                 (data/nvl "active")))
+
+(defn get-list-query
+  "builds basic list query using just filters"
+  [topic status]
+  (-> (dsl/select (dsl/field :id)
+                  (dsl/field :title)
+                  (dsl/field :pitch)
+                  (dsl/field :description)
+                  (dsl/field :status)
+                  (dsl/field :member_limit)
+                  (dsl/field :created_at)
+                  (dsl/field :created_by)
+                  (dsl/field "count(*) OVER ()" "total_count")
+                  (dsl/field "(select count(*) from liber_course where liber_course.course = course.id)" "member_count"))
+      (dsl/from :course)
+      (dsl/where ["course.title ilike ? OR course.description ilike ?" topic topic]
+                 ["course.status = ?" status])))
 
 (defn list-all
   "list all courses"
-  [filter]
-  (let [top (by-topic-filter filter)
-        sts (by-status-filter filter)
-        first (:first filter)
-        after (:after filter)
-        qry (-> (dsl/select (dsl/field :id)
-                            (dsl/field :title)
-                            (dsl/field :pitch)
-                            (dsl/field :description)
-                            (dsl/field :status)
-                            (dsl/field :member_limit)
-                            (dsl/field :created_at)
-                            (dsl/field :created_by)
-                            (dsl/field "count(*) OVER ()" "total_count")
-                            (dsl/field "(select count(*) from liber_course where liber_course.course = course.id)" "member_count"))
-                (dsl/from :course)
-                (dsl/where ["course.title ilike ? OR course.description ilike ?" top top]
-                           ["course.status = ?" sts])
-                (dsl/limit first)
-                (dsl/offset after)
-                (dsl/order-by [:id :desc]))]
-    (db/fetch qry)))
+  [filter pagination]
+  (let [topic (data/wild (:byTopic filter ""))
+        stats (:byStatus filter "active")
+        query (-> (get-list-query topic stats)
+                  (add-pagination pagination))]
+    (db/fetch query)))
 
 (defn create-course
   "creates a new course"

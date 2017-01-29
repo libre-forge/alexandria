@@ -9,8 +9,11 @@
 
 (defn list-all
   [env]
-  (let [filter (get-in env [:args :filter])]
-    (courses/list-all filter)))
+  (let [filter (get-in env [:args :filter])
+        paging (-> (get-in env [:args :pagination])
+                   (g/decode-pagination))]
+    (let [res (courses/list-all filter paging)]
+      (g/convert-to-edges res paging))))
 
 (defn by-id
   [{{:keys [id]} :args}]

@@ -8,27 +8,32 @@
             [libreforge.util.uuid :as uuid]
             [libreforge.db.common :as db]))
 
+(defn get-list-query
+  "builds basic list query using just filters"
+  [topic status]
+  (-> (dsl/select
+       (dsl/field :id)
+       (dsl/field :title)
+       (dsl/field :pitch)
+       (dsl/field :description)
+       (dsl/field :status)
+       (dsl/field :member_limit)
+       (dsl/field :created_at)
+       (dsl/field :created_by)
+       (dsl/field "count(*) OVER ()" "total_count")
+       (dsl/field "(select count(*) from liber_course where liber_course.course = course.id)" "member_count"))
+      (dsl/from :course)
+      (dsl/where ["course.title ilike ? OR course.description ilike ?" topic topic]
+                 ["course.status = ?" status])))
+
 (defn list-all
   "list all courses"
-  [filter]
-  (let [top (->> (:byTopic filter)
-                 (data/nvl "")
-                 (data/wild))
-        sts (->> (:byStatus filter)
-                 (data/nvl "active"))
-        qry (-> (dsl/select (dsl/field :id)
-                            (dsl/field :title)
-                            (dsl/field :pitch)
-                            (dsl/field :description)
-                            (dsl/field :status)
-                            (dsl/field :member_limit)
-                            (dsl/field :created_at)
-                            (dsl/field :created_by)
-                            (dsl/field "(select count(*) from liber_course where liber_course.course = course.id)" "member_count"))
-                (dsl/from :course)
-                (dsl/where ["course.title ilike ? OR course.description ilike ?" top top]
-                           ["course.status = ?" sts]))]
-    (db/fetch qry)))
+  [filter pagination]
+  (let [topic (data/wild (:byTopic filter ""))
+        stats (:byStatus filter "active")
+        query (-> (get-list-query topic stats)
+                  (db/add-pagination pagination))]
+    (db/fetch query)))
 
 (defn create-course
   "creates a new course"

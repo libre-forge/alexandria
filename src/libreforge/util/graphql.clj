@@ -5,7 +5,8 @@
    [graphql-clj.executor :as executor]
    [graphql-clj.parser :as parser]
    [graphql-clj.type :as type]
-   [graphql-clj.validator :as validator]))
+   [graphql-clj.validator :as validator]
+   [libreforge.util.data :as data]))
 
 ;; ##############################
 ;; ## Pipeline Response Types ###
@@ -149,3 +150,52 @@
   [schema mappings]
   (fn [ctx query vars]
     (executor/execute ctx schema mappings query vars)))
+
+;; ##############################
+;; ## GraphQL edges responses ###
+;; ##############################
+
+(defn to-node
+  "converts every edge item to a node"
+  [record]
+  {:node record
+   :cursor (-> (:id record)
+               (str)
+               (data/str->base64))})
+
+;; #TODO when false graphql-clj shows null
+(defn calculate-has-next
+  "naive implementation of hasNext"
+  [page-count pagination]
+  (let [first (:first pagination)
+        last (:last pagination)]
+    (cond
+      (not (nil? first)) (>= page-count first)
+      (not (nil? last)) (>= page-count last)
+      :else false)))
+
+(defn convert-to-edges
+  "converts list result to edges"
+  [result pagination]
+  (let [total-count (if (empty? result)
+                     0
+                     (:total_count (first result)))
+        edges (map to-node result)
+        first-row (-> (:id (first result))
+                      (str)
+                      (data/str->base64))
+        last-row (-> (:id (last result))
+                     (str)
+                     (data/str->base64))
+        page-count (count result)
+        has-next (calculate-has-next page-count pagination)]
+    {:totalCount total-count
+     :edges edges
+     :pageInfo {:startCursor first-row
+                :endCursor last-row
+                :hasNext has-next}}))
+
+(defn decode-pagination
+  [pagination]
+  (-> (update pagination :before data/base64->str)
+      (update :after data/base64->str)))

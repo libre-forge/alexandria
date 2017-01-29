@@ -10,7 +10,7 @@
 (def routes
   "GraphQL routing definition"
   [[auth/add-user-info]
-   [:QueryRoot
+   [:Query
     [:course courses/by-id]
     [:courses courses/list-all]
     [:subject subjects/by-id]
@@ -26,7 +26,7 @@
    [:Resource
     [:created_by resources/owner]]
    ;; Mutations
-   [:MutationRoot
+   [:Mutation
     [:login auth/login]
     [auth/assert-logged-in]
     [:course courses/create]

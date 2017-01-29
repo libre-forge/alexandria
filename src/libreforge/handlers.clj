@@ -22,8 +22,7 @@
   (let [mp (:data ctx)
         hs (:headers ctx)
         qy (get-in mp ["query"])
-        vs (-> (get-in mp ["variables"])
-               (json/parse-string))
+        vs (get-in mp ["variables"])
         rs (graphql/resolve hs qy vs)]
     (-> (json/encode rs)
         (http/ok {:content-type http-util/json-type}))))

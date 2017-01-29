@@ -71,6 +71,30 @@ type Course {
     __typename:String
 }
 
+input Pagination {
+  first: Int
+  last: Int
+  before: String
+  after: String
+}
+
+type CourseResult {
+  totalCount: Int
+  pageInfo: PageInfo
+  edges: [CourseNode]
+}
+
+type CourseNode {
+  node: Course
+  cursor: String!
+}
+
+type PageInfo {
+  startCursor: String
+  endCursor: String
+  hasNext: Boolean
+}
+
 type Resource {
     id: String
     title: String
@@ -101,7 +125,7 @@ type Subject {
 type Query {
     user(email: String!): User
     course(id: String!): Course
-    courses(filter: CourseFilter): [Course]
+    courses(filter: CourseFilter, pagination: Pagination): CourseResult
     subject(id: String!): Subject
 }
 

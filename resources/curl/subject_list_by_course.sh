@@ -1,1 +1,0 @@
-curl 'http://localhost:3030/api/graphql' -H 'Origin: http://localhost:8080' -H 'content-type: application/json'  --data-binary '{"query":"query Subjects($course: String) {\n  subjects(course: $course) {created_by\norder}\n}\n","variables":{"course":"a4d145c8-df92-4f13-aca0-12fb0a257df2"}}' --compressed

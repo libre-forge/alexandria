@@ -156,29 +156,44 @@
 ;; ##############################
 
 (defn to-node
+  "converts every edge item to a node"
   [record]
   {:node record
    :cursor (-> (:id record)
                (str)
                (data/str->base64))})
 
+;; #TODO when false graphql-clj shows null
+(defn calculate-has-next
+  "naive implementation of hasNext"
+  [page-count pagination]
+  (let [first (:first pagination)
+        last (:last pagination)]
+    (cond
+      (not (nil? first)) (>= page-count first)
+      (not (nil? last)) (>= page-count last)
+      :else false)))
+
 (defn convert-to-edges
-  [result]
-  (let [totalCount (if (empty? result)
+  "converts list result to edges"
+  [result pagination]
+  (let [total-count (if (empty? result)
                      0
                      (:total_count (first result)))
         edges (map to-node result)
-        firstRow (-> (:id (first result))
+        first-row (-> (:id (first result))
+                      (str)
+                      (data/str->base64))
+        last-row (-> (:id (last result))
                      (str)
                      (data/str->base64))
-        lastRow (-> (:id (last result))
-                    (str)
-                    (data/str->base64))]
-    {:totalCount totalCount
+        page-count (count result)
+        has-next (calculate-has-next page-count pagination)]
+    {:totalCount total-count
      :edges edges
-     :pageInfo {:startCursor firstRow
-                :endCursor lastRow}}))
-
+     :pageInfo {:startCursor first-row
+                :endCursor last-row
+                :hasNext has-next}}))
 
 (defn decode-pagination
   [pagination]

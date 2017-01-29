@@ -13,7 +13,7 @@
         paging (-> (get-in env [:args :pagination])
                    (g/decode-pagination))]
     (let [res (courses/list-all filter paging)]
-      (g/convert-to-edges res))))
+      (g/convert-to-edges res paging))))
 
 (defn by-id
   [{{:keys [id]} :args}]

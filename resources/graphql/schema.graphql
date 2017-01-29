@@ -92,6 +92,7 @@ type CourseNode {
 type PageInfo {
   startCursor: String
   endCursor: String
+  hasNext: Boolean
 }
 
 type Resource {

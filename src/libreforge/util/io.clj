@@ -5,5 +5,4 @@
   "reads the content of a file in the class path"
   [class-path]
   (-> (io/resource class-path)
-      (io/file)
       (slurp)))
